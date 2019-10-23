@@ -1,0 +1,43 @@
+1.1.2
+- zone selection dropbox replaced with separate zone selection screen to allow more feedback
+- menu screen also redesigned now:
+  When having entered a valid ipadres/poortnr the media screen is shown directly if there is only one Sonos zone,
+  the zone selection screen is shown if more zones exist.
+- bug fix: when a new playlist was selected if was automatically applied to the first zone, not to the active one.
+- various code improvements and gui improvements
+- queue is cleared before switching to a radio station
+- zone selection screen contains control buttons for all zones in one screen
+
+1.1.1
+- allow switch into dim state from the media screen
+
+1.1.0
+- taken over from Harmen who left the developer scene
+- major rewrite of the internals of the app with a smaller footprint
+- merged the functionality of the two tiles into one tile
+- title of the song (from library or radio station) will be shown in dim state on the tile
+- favourites screen now also contains a list of playlists to select (which will populate the queue)
+- screen elements adjusted for the screen resolution of Toon 2
+- various minor improvements, code cleanup ((almost) no warnings anymore in the console log)
+- media screen has now fixed positions for the control buttons (not depending anymore on image size)
+- screen elements are updated directly after selecting a track from the playlist
+- play/pause buttons are only displayed after previous action has been completed
+- tile and media screen are refreshed every 5 seconds during manual operations,
+  switching to every 20 seconds in dim state (to update current tracks on the tile)
+- tile in dim state shows also if music is pause
+- removed tiny thumbnails from the play queue list (saves memory)
+
+
+1.0.3
+- firmware 5 compatibility
+
+1.0.2
+- Fixes:
+sonosIP wordt nu opgehaald voor het weergeven van queue thumbs in de playlist (op het mediascreen)
+itemTime (op het mediascreen) wordt nu netjes uitgelijnt bij radio (onder titel) bij de gewone playlist onder de itemnaam zelf.
+
+1.0.1
+- Fixes:
+edittextlabels werken niet in firmware 3.x, dit probleem is nu gefixt.
+op beide tiles en op het mediascreen is nu de title toegevoegd onder het stationname (dus nu is er en de radiozender, en de titel van het huidige nummer)
+
