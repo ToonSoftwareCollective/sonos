@@ -3,10 +3,11 @@
 // Further enhanced by Toonz after Harmen stopped developing
 //
 
-import QtQuick 1.1
+import QtQuick 2.1
 import qb.components 1.0
 import qb.base 1.0;
 import ScreenStateController 1.0
+import FileIO 1.0
 
 App {
 	id: root
@@ -15,7 +16,7 @@ App {
 	property url mediaSelectZoneUrl : "MediaSelectZone.qml"
 	property url tileUrl : "SonosTile.qml"
 	property url tileUrlControl : "SonosMiniControlTile.qml"
-	property url thumbnailIcon: "./drawables/SonosThumb.png"
+	property url thumbnailIcon: "qrc:/tsc/SonosThumb.png"
 	property MenuScreen menuScreen
 	property MediaScreen mediaScreen
 	property MediaSelectZone mediaSelectZone
@@ -41,11 +42,20 @@ App {
 	property bool pauseButtonVisible : false
 	property bool shuffleButtonVisible : true
 	property bool shuffleOnButtonVisible : false
+	property variant settings : {
+			"showSonosIcon" : "true",
+			"sonosName" : "",
+			"path" : ""
+		}
 
 	//this is the main property for the complete Sonos App!
 	property string connectionPath
 
-	
+	FileIO {
+		id: sonosSettingsFile
+		source: "file:///mnt/data/tsc/sonos.userSettings.json"
+ 	}
+
 	QtObject {
 		id: p
 		property url favoritesScreenUrl : "FavoritesScreen.qml"
@@ -64,7 +74,7 @@ App {
 	
 	//this function needs to be started after the app is booted.
 	Component.onCompleted: {
-		startupSonos();
+		readSettings();
 	}
 
 	Connections {
@@ -82,12 +92,6 @@ App {
 		}
 	}
 
-
-	//this are the needed functions after a startup.
-	function startupSonos() {
-		readSonosIconState();
-		readConnection();
-	}
 	
 	//this will update the found zones in your sonos HTTP API and write it to ZoneItemsJS, but also push it to the new Array which is used by the whole application.
 	function updateAvailableZones() {
@@ -116,9 +120,7 @@ App {
 	//this is the save of the toggle which could be found in the menuscreen.
 	function saveshowSonosIcon(text) {
 		showSonosIcon = (text == "Yes");
-   		var doc2 = new XMLHttpRequest();
-   		doc2.open("PUT", "file:///HCBv2/qml/apps/sonos/showSonosIcon.txt");
-   		doc2.send(showSonosIcon);
+   		saveSettings();
 		if (showSonosIcon) {
 			mediaTray.show();
 		} else {
@@ -126,46 +128,47 @@ App {
 		}
 	}
 	
+	function saveSettings() {
+
+		var tmpTrayIcon = "";
+		if (showSonosIcon == true) {
+			tmpTrayIcon = "true";
+		} else {
+			tmpTrayIcon = "false";
+		}
+
+		settings["showSonosIcon"] = tmpTrayIcon;
+		settings["sonosName"] = sonosName;
+		settings["path"] = connectionPath;
+
+		var saveFile = new XMLHttpRequest();
+		saveFile.open("PUT", "file:///mnt/data/tsc/sonos.userSettings.json");
+		saveFile.send(JSON.stringify(settings));
+	}
+	
 	//In this read function you'll find the execution of the visibility of the systray icon.
-	function readSonosIconState() {
-		var doc3 = new XMLHttpRequest();
-		doc3.onreadystatechange = function() {
-			if (doc3.readyState == XMLHttpRequest.DONE) {
-				if (doc3.responseText.length > 2) {
-					showSonosIcon = (doc3.responseText == "true");
-					if (showSonosIcon) {
-						mediaTray.show();
-					} else {
-						mediaTray.hide();
-					}
-				}
+	function readSettings() {
+
+		//read user settings
+
+		var settingsString = sonosSettingsFile.read();
+		settings = JSON.parse(settingsString);
+		if (settings['showSonosIcon']) showSonosIcon = (settings['showSonosIcon'] == "true");
+		if (settings['sonosName']) sonosName = (settings['sonosName']);
+		if (settings['path']) {
+			connectionPath = (settings['path']);
+			if (connectionPath.length > 0) {
+				var pathVar = connectionPath;
+				var splitVar = pathVar.split(":")
+				ipadresLabel = splitVar[0];
+				poortnummer = splitVar[1];
 			}
- 		}
-		doc3.open("GET", "file:///HCBv2/qml/apps/sonos/showSonosIcon.txt", true);
-		doc3.send();
+			updateAvailableZones();
+		}
+		console.log("********** Sonos - path:" + settings['path']);
 	}
 	
-	//this read function will show you the correct information after a reboot of your toon device, it will receive the information of the pathstring.txt file.
-	function readConnection() {
-		var doc2 = new XMLHttpRequest();
-		doc2.onreadystatechange = function() {
-			if (doc2.readyState == XMLHttpRequest.DONE) {
-				if (doc2.responseText.length > 2) {
-					connectionPath = doc2.responseText;
-					if (connectionPath.length > 0) {
-						var pathVar = connectionPath;
-						var splitVar = pathVar.split(":")
-						ipadresLabel = splitVar[0];
-						poortnummer = splitVar[1];
-					}
-					updateAvailableZones();
-				}
- 			}
-		}  		
-		doc2.open("GET", "file:///HCBv2/qml/apps/sonos/pathstring.txt", true);
-		doc2.send();
-	}
-	
+
 	//This part is to create the now playing image and to start all the functions which are required for using the sonos app correctly.
 	//When you are playing radio (no playlist) it have to check the station name and not the "track" name thats why you'll find this check.
 	function readSonosState() {

@@ -1,4 +1,4 @@
-import QtQuick 1.1
+import QtQuick 2.1
 import BasicUIControls 1.0
 import qb.components 1.0
 
@@ -32,6 +32,7 @@ Rectangle
 		x: isNxt ? 25 : 20
 		onClicked: {
 			app.sonosName = zoneName;
+			app.saveSettings();
 			hide();
 		}
 	}
@@ -72,7 +73,7 @@ Rectangle
 			leftMargin: isNxt ? 15 : 12
 		}
 
-		iconSource: "./drawables/volume_down_small.png"
+		iconSource: "qrc:/tsc/volume_down_small.png"
 		onClicked: {
 			app.simpleSynchronous("http://"+app.connectionPath+"/"+zoneName+"/volume/-5");
 			volume = volume - 5;
@@ -88,7 +89,7 @@ Rectangle
 			bottom: volumeDown.bottom
 		}
 
-		iconSource: "./drawables/left.png"
+		iconSource: "qrc:/tsc/left.png"
 		onClicked: {
 			app.simpleSynchronous("http://"+app.connectionPath+"/"+zoneName + "/previous");
 		}
@@ -102,7 +103,7 @@ Rectangle
 			bottom: prevButton.bottom
 		}
 
-		iconSource: "./drawables/pause.png"
+		iconSource: "qrc:/tsc/pause.png"
 		onClicked: {
 			app.simpleSynchronous("http://"+app.connectionPath+"/"+zoneName+"/pause");
 		}
@@ -117,7 +118,7 @@ Rectangle
 			bottom: pauseButton.bottom
 		}
 
-		iconSource: "./drawables/play.png"
+		iconSource: "qrc:/tsc/play.png"
 		onClicked: {
 			app.simpleSynchronous("http://"+app.connectionPath+"/"+zoneName+"/play");
 			}
@@ -132,7 +133,7 @@ Rectangle
 			bottom: pauseButton.bottom
 		}
 
-		iconSource: "./drawables/right.png"
+		iconSource: "qrc:/tsc/right.png"
 		onClicked: {
 			console.log("next");
 			app.simpleSynchronous("http://"+app.connectionPath+"/"+zoneName+"/next");
@@ -148,7 +149,7 @@ Rectangle
 			leftMargin: isNxt ? 15 : 12
 		}
 
-		iconSource: "./drawables/volume_up_small.png"
+		iconSource: "qrc:/tsc/volume_up_small.png"
 		onClicked: {
 			app.simpleSynchronous("http://"+app.connectionPath+"/"+zoneName+"/volume/+5");
 			volume = volume + 5;

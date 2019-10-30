@@ -1,3 +1,8 @@
+1.1.3
+- selected zone is now saved in the settings file and selected again after a gui-restart
+- settings file is moved to /mnt/data/tsc, the sonos controller ip address needs to be reconfigured once.
+  old settings are not copied.
+
 1.1.2
 - zone selection dropbox replaced with separate zone selection screen to allow more feedback
 - menu screen also redesigned now:

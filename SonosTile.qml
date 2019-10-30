@@ -2,7 +2,7 @@
 // Sonos app by Harmen Bartelink, further enhanced by Toonz
 //
 
-import QtQuick 1.1
+import QtQuick 2.1
 import BasicUIControls 1.0
 import qb.components 1.0
 
@@ -126,7 +126,7 @@ Tile {
 			leftMargin: isNxt ? 2 : 1
 		}
 
-		iconSource: "./drawables/volume_down_small.png"
+		iconSource: "qrc:/tsc/volume_down_small.png"
 		onClicked: {
 			app.simpleSynchronous("http://"+app.connectionPath+"/"+app.sonosName+"/volume/-5");
 		}
@@ -140,7 +140,7 @@ Tile {
 			bottom: volumeDown.bottom
 		}
 
-		iconSource: "./drawables/left.png"
+		iconSource: "qrc:/tsc/left.png"
 		onClicked: {
 			app.simpleSynchronous("http://"+app.connectionPath+"/previous");
 		}
@@ -155,7 +155,7 @@ Tile {
 			bottom: prevButton.bottom
 		}
 
-		iconSource: "./drawables/pause.png"
+		iconSource: "qrc:/tsc/pause.png"
 		onClicked: {
 			app.playButtonVisible = false;
 			app.pauseButtonVisible = false;
@@ -172,7 +172,7 @@ Tile {
 			bottom: pauseButton.bottom
 		}
 
-		iconSource: "./drawables/play.png"
+		iconSource: "qrc:/tsc/play.png"
 		onClicked: {
 			app.playButtonVisible = false;
 			app.pauseButtonVisible = false;
@@ -189,7 +189,7 @@ Tile {
 			bottom: playButton.bottom
 		}
 
-		iconSource: "./drawables/shuffle_on.png"
+		iconSource: "qrc:/tsc/shuffle_on.png"
 		onClicked: {
 			app.shuffleButtonVisible = false;
 			app.shuffleOnButtonVisible = false;
@@ -206,7 +206,7 @@ Tile {
 			bottom: playButton.bottom
 		}
 
-		iconSource: "./drawables/shuffle.png"
+		iconSource: "qrc:/tsc/shuffle.png"
 		onClicked: {
 			app.shuffleButtonVisible = false;
 			app.shuffleOnButtonVisible = false;
@@ -224,7 +224,7 @@ Tile {
 			bottom: shuffleButton.bottom
 		}
 
-		iconSource: "./drawables/right.png"
+		iconSource: "qrc:/tsc/right.png"
 		onClicked: {
 			console.log("next");
 			app.simpleSynchronous("http://"+app.connectionPath+"/"+app.sonosName+"/next");
@@ -241,7 +241,7 @@ Tile {
 			leftMargin: isNxt ? 4 : 2
 		}
 
-		iconSource: "./drawables/volume_up_small.png"
+		iconSource: "qrc:/tsc/volume_up_small.png"
 		onClicked: {
 			app.simpleSynchronous("http://"+app.connectionPath+"/"+app.sonosName+"/volume/+5");
 		}

@@ -1,4 +1,4 @@
-import QtQuick 1.1
+import QtQuick 2.1
 
 import qb.components 1.0
 import qb.base 1.0
@@ -17,7 +17,7 @@ SystrayIcon {
 	Image {
 		id: imgNewMessage
 		anchors.centerIn: parent
-		source: "./drawables/SonosSystrayIcon.png"
+		source: "qrc:/tsc/SonosSystrayIcon.png"
 	}
 }
 

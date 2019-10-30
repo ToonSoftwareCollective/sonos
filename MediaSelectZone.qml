@@ -1,4 +1,4 @@
-import QtQuick 1.1
+import QtQuick 2.1
 import qb.components 1.0
 import BasicUIControls 1.0;
 
@@ -110,7 +110,7 @@ Screen {
 	
 	Timer {
 		id: zoneTimer
-		interval: 3000
+		interval: 10000
 		triggeredOnStart: false
 		running: false
 		repeat: true

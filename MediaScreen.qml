@@ -1,4 +1,4 @@
-import QtQuick 1.1
+import QtQuick 2.1
 import BasicUIControls 1.0
 import qb.components 1.0
 
@@ -10,13 +10,10 @@ Screen {
 
 	property string export_ip
 	
-	property int playTime
 	property int tempId
-	property string elapsedTimeFormatted
 	property string playState
 	property string shuffleMode
 	property string itemType
-	property int totalTime
 	property int volumeState
 	property alias queueTimerControl : queueTimer
 	
@@ -27,22 +24,17 @@ Screen {
 	}
 	
 	onHidden: {
-		playTimer.stop();
 		queueTimer.stop();
 	}
 
 	onShown: {
-		playTime = 0;
-		totalTime = 0;
 		addCustomTopRightButton("Favorieten");
-		app.readSonosState();
-		updateQueue();		
+		if (app.sonosName.length > 0) updateQueue();		
 		//in the menuscreen you'll need to fill in your hostname and portnumber, if there is no device found you will have an popup that you have to correct your configuration
 		if (app.sonosName.length < 1) {
 			if (app.menuScreen)	
 				app.menuScreen.show();
 		}
-		playTimer.start();
 		queueTimer.start();
 	}
 	
@@ -121,27 +113,6 @@ Screen {
 		width: isNxt ? 250 : 200
 	}
 	
-	//Showing the time below the information, will be automaticly updated.
-	
-	Text {
-		id: itemTime
-
-		text: "-"
-		font.pixelSize: isNxt ? 12 : 10
-		font.family: qfont.regular.name
-		font.bold: false
-		color: colors.tileTextColor
-
-		wrapMode: Text.WordWrap
-		horizontalAlignment: Text.AlignHCenter
-		anchors.top: itemText.bottom
-		anchors.left: parent.left
-		anchors.leftMargin: isNxt ? 40 : 32
-		anchors.topMargin: 3
-		
-		width: isNxt ? 275 : 220
-	}
-
 	//below you'll find the iconbuttons which are controlling your device (previous, play/pause, shuffle on and shuffle off and the next button)
 	IconButton {
 		id: prevButton
@@ -151,7 +122,7 @@ Screen {
 			bottom: boilerScrollableSimpleList.bottom
 		}
 
-		iconSource: "./drawables/left.png"
+		iconSource: "qrc:/tsc/left.png"
 		onClicked: {
 			app.simpleSynchronous("http://"+app.connectionPath+"/"+app.sonosName+"/previous");
 		}
@@ -166,7 +137,7 @@ Screen {
 			top: prevButton.top
 		}
 
-		iconSource: "./drawables/pause.png"
+		iconSource: "qrc:/tsc/pause.png"
 		onClicked: {
 			app.playButtonVisible = false;
 			app.pauseButtonVisible = false;
@@ -184,7 +155,7 @@ Screen {
 			top: prevButton.top
 		}
 
-		iconSource: "./drawables/play.png"
+		iconSource: "qrc:/tsc/play.png"
 		onClicked: {
 			app.playButtonVisible = false;
 			app.pauseButtonVisible = false;
@@ -201,7 +172,7 @@ Screen {
 			top: prevButton.top
 		}
 
-		iconSource: "./drawables/shuffle_on.png"
+		iconSource: "qrc:/tsc/shuffle_on.png"
 		onClicked: {
 			app.shuffleButtonVisible = false;
 			app.shuffleOnButtonVisible = false;
@@ -218,7 +189,7 @@ Screen {
 			top: prevButton.top
 		}
 
-		iconSource: "./drawables/shuffle.png"
+		iconSource: "qrc:/tsc/shuffle.png"
 		onClicked: {
 			app.shuffleButtonVisible = false;
 			app.shuffleOnButtonVisible = false;
@@ -235,7 +206,7 @@ Screen {
 			top: prevButton.top
 		}
 
-		iconSource: "./drawables/right.png"
+		iconSource: "qrc:/tsc/right.png"
 		onClicked: {
 			console.log("next");
 			app.simpleSynchronous("http://"+app.connectionPath+"/"+app.sonosName+"/next");
@@ -255,7 +226,6 @@ Screen {
 				anchors.fill: parent
 				anchors.topMargin: -10
 				onClicked: {
-					playTime = 0;
 					app.actualArtist = app.queue[item]['artist'];
 					app.actualTitle = app.queue[item]['name'];
 					app.nowPlayingImage = "";
@@ -334,7 +304,7 @@ Screen {
 			leftMargin: isNxt ? 10 : 7
 		}
 
-		iconSource: "./drawables/volume_up.png"
+		iconSource: "qrc:/tsc/volume_up.png"
 		onClicked: {
 			app.simpleSynchronous("http://"+app.connectionPath+"/"+app.sonosName+"/volume/+5");
 		}
@@ -350,7 +320,7 @@ Screen {
 			rightMargin: isNxt ? 10 : 7
 		}
 
-		iconSource: "./drawables/volume_down.png"
+		iconSource: "qrc:/tsc/volume_down.png"
 		onClicked: {
 			app.simpleSynchronous("http://"+app.connectionPath+"/"+app.sonosName+"/volume/-5");
 		}
@@ -376,17 +346,6 @@ Screen {
 	function pad(n, width) {
 		n = n + '';
 		return n.length >= width ? n : new Array(width - n.length + 1).join('0') + n;
-	}
-	
-	//this is to automaticly change the playtime when your sonos device is "playing".
-	function updatePlayTimer() {
-		if (playState == "PLAYING") {
-			playTime = playTime +1;
-			itemTime.text = Math.floor(playTime/60)+":"+pad((playTime-(Math.floor(playTime/60)*60)), 2)+" / "+Math.floor(totalTime/60)+":"+pad((totalTime-(Math.floor(totalTime/60)*60)), 2);
-		}
-		if (playTime < 0) {
-			itemTime.text = "-";
-		}
 	}
 
 	//This function is to setup the playlist, export the information to: PlaylistItemsJS and configure the scrollable list (refresh and everything).
@@ -420,15 +379,6 @@ Screen {
 		xmlhttp.send();
 	}
 	
-	Timer {
-		id: playTimer
-		interval: 1000
-		triggeredOnStart: true
-		running: false
-		repeat: true
-		onTriggered: updatePlayTimer()
-	}
-
 	Timer {
 		id: queueTimer
 		interval: 5000

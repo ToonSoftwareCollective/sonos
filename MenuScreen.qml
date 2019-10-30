@@ -1,4 +1,4 @@
-import QtQuick 1.1
+import QtQuick 2.1
 import BasicUIControls 1.0
 import qb.components 1.0
 
@@ -149,7 +149,7 @@ Screen {
 					bottom: ipadresLabel.bottom
 					right: parent.right
 				}
-				iconSource: "./drawables/edit.png"
+				iconSource: "qrc:/tsc/edit.png"
 
 				onClicked: {
 					openKeyboard(p._IP_KEYBOARD);
@@ -186,7 +186,7 @@ Screen {
 					bottom: poortnummerLabel.bottom
 					right: parent.right
 				}
-				iconSource: "./drawables/edit.png"
+				iconSource: "qrc:/tsc/edit.png"
 
 				onClicked: {
 					openKeyboard(p._PORTNUMBER_KEYBOARD);

@@ -1,10 +1,10 @@
-import QtQuick 1.1
+import QtQuick 2.1
 import BasicUIControls 1.0
 import qb.components 1.0
 
 Screen {
 	id: favoritesScreen
-	screenTitleIconUrl: "./drawables/Sonos_Favorites.png";
+	screenTitleIconUrl: "qrc:/tsc/Sonos_Favorites.png";
 	screenTitle: "Sonos Favorieten";
 	hasHomeButton: false
 
@@ -103,7 +103,7 @@ Screen {
 		anchors.right: refreshButton.left
 		anchors.rightMargin: 10
 		anchors.topMargin: isNxt ? 20 : 16
-		iconSource: "./drawables/input.png"
+		iconSource: "qrc:/tsc/input.png"
 		onClicked: {
 			simpleSynchronous("http://"+app.connectionPath+"/"+app.sonosName+"/setavtransporturi/x-sonos-htastream:"+lineinUrl+":spdif")
 		}
@@ -116,7 +116,7 @@ Screen {
 		anchors.right: parent.right
 		anchors.rightMargin: isNxt ? 80 : 64
 		anchors.topMargin: isNxt ? 20 : 16
-		iconSource: "./drawables/refresh.png"
+		iconSource: "qrc:/tsc/refresh.png"
 		onClicked: {
 			updateFavoriteslist();
 			updatePlaylists();
