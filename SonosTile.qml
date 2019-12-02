@@ -19,7 +19,7 @@ Tile {
 	Text {
 		id: zoneName
 
-		text: app.sonosName
+		text: app.sonosNameIsGroup ? "Grp " + app.sonosName : app.sonosName
 		font.pixelSize: isNxt ? 20 : 16
 		font.family: qfont.regular.name
 		font.bold: true
@@ -128,7 +128,11 @@ Tile {
 
 		iconSource: "qrc:/tsc/volume_down_small.png"
 		onClicked: {
-			app.simpleSynchronous("http://"+app.connectionPath+"/"+app.sonosName+"/volume/-5");
+			if (app.sonosNameIsGroup) {
+				app.simpleSynchronous("http://"+app.connectionPath+"/"+app.sonosName+"/groupVolume/-5");
+			} else {
+				app.simpleSynchronous("http://"+app.connectionPath+"/"+app.sonosName+"/volume/-5");
+			}
 		}
 		visible: !dimState
 	}
@@ -243,7 +247,11 @@ Tile {
 
 		iconSource: "qrc:/tsc/volume_up_small.png"
 		onClicked: {
-			app.simpleSynchronous("http://"+app.connectionPath+"/"+app.sonosName+"/volume/+5");
+			if (app.sonosNameIsGroup) {
+				app.simpleSynchronous("http://"+app.connectionPath+"/"+app.sonosName+"/groupVolume/+5");
+			} else {
+				app.simpleSynchronous("http://"+app.connectionPath+"/"+app.sonosName+"/volume/+5");
+			}
 		}
 		visible: !dimState
 	}

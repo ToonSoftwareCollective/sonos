@@ -101,8 +101,6 @@ Screen {
 				id: titleText
 				anchors {
 					left: parent.left
-					right: infoButton.left
-					rightMargin: 6
 				}
 				font {
 					pixelSize: qfont.bodyText

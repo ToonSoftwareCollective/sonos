@@ -33,6 +33,7 @@ App {
 	property variant queue : []
 	property variant sonoslist : []
 	property string sonosName
+	property bool sonosNameIsGroup : false
 	property string ipadresLabel
 	property string poortnummer
 	property string actualArtist
@@ -97,18 +98,29 @@ App {
 	function updateAvailableZones() {
 		var newArray = [];
 		var xmlhttp = new XMLHttpRequest();
+		var tmpSonosName = sonosName;
+		sonosName = "";
 		xmlhttp.onreadystatechange=function() {
 			if (xmlhttp.readyState == 4) {
 				if (xmlhttp.status == 200) {
 					var response = JSON.parse(xmlhttp.responseText);
+					sonosNameIsGroup = false;
 					if (response.length > 0) {
 						for (var i = 0; i < response.length; i++) {
-							newArray.push({name: response[i]["coordinator"]["roomName"]});
+								// determine group or single room
+							var tmpGroupFlag = (response[i]["members"].length > 1);
+								// update groupflag for zone from settingsfile
+							if (tmpSonosName == response[i]["coordinator"]["roomName"]) {
+								sonosName = tmpSonosName;
+								sonosNameIsGroup = tmpGroupFlag;
+							}
+							newArray.push({name: response[i]["coordinator"]["roomName"], isGroup: tmpGroupFlag});
 						}
 						sonoslist = newArray;
 					} 
 					if (sonosName.length < 1) {
 						sonosName = newArray[0]['name'];
+						sonosNameIsGroup = newArray[0]['isGroup'];
 					} 
 				}
 			}

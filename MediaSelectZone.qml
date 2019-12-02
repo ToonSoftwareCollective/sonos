@@ -19,12 +19,13 @@ Screen {
 
 		var xmlhttp = new XMLHttpRequest();
 		var actualArtist = "";
+		var tmpIsGroup = "";
 		xmlhttp.onreadystatechange=function() {
 			if (xmlhttp.readyState == 4) {
 				if (xmlhttp.status == 200) {
 					var response = JSON.parse(xmlhttp.responseText);
 					if (response.length > 0) {
-						var len = zoneNameModel.length;
+						zoneNameModel.clear();
 						for (var i = 0; i < response.length; i++) {
 							if (response[i]["coordinator"]["state"]['currentTrack']['type'] == "track"){
 								actualArtist = response[i]["coordinator"]["state"]['currentTrack']['artist'];
@@ -32,11 +33,12 @@ Screen {
 							if (response[i]["coordinator"]["state"]['currentTrack']['type'] == "radio"){
 								actualArtist = response[i]["coordinator"]["state"]['currentTrack']['stationName'];
 							}
-							if (i > len) {
-								zoneNameModel.append({zoneName: response[i]["coordinator"]["roomName"], playbackState: response[i]["coordinator"]["state"]["playbackState"], volume: response[i]["coordinator"]["groupState"]["volume"], artist: actualArtist});
-							} else {  //update existing element
-								zoneNameModel.set(i, {zoneName: response[i]["coordinator"]["roomName"], playbackState: response[i]["coordinator"]["state"]["playbackState"], volume: response[i]["coordinator"]["groupState"]["volume"], artist: actualArtist});
+							if (response[i]["members"].length > 1) {
+								tmpIsGroup = "yes"
+							} else {
+								tmpIsGroup = "no"
 							}
+							zoneNameModel.append({zoneName: response[i]["coordinator"]["roomName"], playbackState: response[i]["coordinator"]["state"]["playbackState"], volume: response[i]["coordinator"]["groupState"]["volume"], artist: actualArtist, isGroup: tmpIsGroup});
 						}
 					} 
 				}

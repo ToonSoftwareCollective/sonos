@@ -43,6 +43,14 @@ Screen {
 		qdialog.showDialog(qdialog.SizeLarge, qsTr("Informatie"), qsTr("U bent nu doorgestuurd naar het menuscherm omdat er of nog geen hostname en of poortnummer is ingevuld, of de Sonos HTTP Api werkt niet. <br><br> Check deze gegevens op het menuscherm waar u nu op terecht bent gekomen. ") , qsTr("Sluiten"));
 	}
 
+	function getZoneTitle() {
+		
+		var title = (app.sonoslist.length > 1) ? app.sonosName + " (>>)" : app.sonosName
+		if (app.sonosNameIsGroup) {
+			title = "(Grp) " + title
+		}
+		return title
+	}
 
 	//this is the item for the now playing image
 	StyledRectangle {
@@ -306,7 +314,11 @@ Screen {
 
 		iconSource: "qrc:/tsc/volume_up.png"
 		onClicked: {
-			app.simpleSynchronous("http://"+app.connectionPath+"/"+app.sonosName+"/volume/+5");
+			if (app.sonosNameIsGroup) {
+				app.simpleSynchronous("http://"+app.connectionPath+"/"+app.sonosName+"/groupVolume/+5");
+			} else {
+				app.simpleSynchronous("http://"+app.connectionPath+"/"+app.sonosName+"/volume/+5");
+			}
 		}
 	}
 	
@@ -322,13 +334,17 @@ Screen {
 
 		iconSource: "qrc:/tsc/volume_down.png"
 		onClicked: {
-			app.simpleSynchronous("http://"+app.connectionPath+"/"+app.sonosName+"/volume/-5");
+			if (app.sonosNameIsGroup) {
+				app.simpleSynchronous("http://"+app.connectionPath+"/"+app.sonosName+"/groupVolume/-5");
+			} else {
+				app.simpleSynchronous("http://"+app.connectionPath+"/"+app.sonosName+"/volume/-5");
+			}
 		}
 	}
 
 	StandardButton {
 		id: btnZone
-		text: (app.sonoslist.length > 1) ? app.sonosName + "   (>>)" : app.sonosName
+		text: getZoneTitle()
 		fontPixelSize: isNxt ? 25 : 20
 		anchors {
 			bottom: nowPlaying.top

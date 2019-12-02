@@ -27,11 +27,12 @@ Rectangle
 		width: isNxt ? 270 : 220
 		height: isNxt ? 45 : 36
 		radius: 5
-		text: zoneName
+		text: (isGroup == "yes") ? "Grp " + zoneName : zoneName
 		fontPixelSize: isNxt ? 25 : 20
 		x: isNxt ? 25 : 20
 		onClicked: {
 			app.sonosName = zoneName;
+			app.sonosNameIsGroup = (isGroup == "yes");
 			app.saveSettings();
 			hide();
 		}
@@ -75,7 +76,11 @@ Rectangle
 
 		iconSource: "qrc:/tsc/volume_down_small.png"
 		onClicked: {
-			app.simpleSynchronous("http://"+app.connectionPath+"/"+zoneName+"/volume/-5");
+			if (isGroup == "yes") {
+				app.simpleSynchronous("http://"+app.connectionPath+"/"+app.sonosName+"/groupVolume/-5");
+			} else {
+				app.simpleSynchronous("http://"+app.connectionPath+"/"+app.sonosName+"/volume/-5");
+			}
 			volume = volume - 5;
 			if (volume < 0 ) volume = 0;
 		}
@@ -151,7 +156,11 @@ Rectangle
 
 		iconSource: "qrc:/tsc/volume_up_small.png"
 		onClicked: {
-			app.simpleSynchronous("http://"+app.connectionPath+"/"+zoneName+"/volume/+5");
+			if (isGroup == "yes") {
+				app.simpleSynchronous("http://"+app.connectionPath+"/"+app.sonosName+"/groupVolume/+5");
+			} else {
+				app.simpleSynchronous("http://"+app.connectionPath+"/"+app.sonosName+"/volume/+5");
+			}
 			volume = volume + 5;
 			if (volume > 100) volume = 100;
 		}
