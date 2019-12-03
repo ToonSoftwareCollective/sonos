@@ -1,3 +1,6 @@
+1.1.4
+- added support for speakergroups (shown as 'Grp zonename'). Volume settings will apply to all speakers in the group
+
 1.1.3
 - selected zone is now saved in the settings file and selected again after a gui-restart
 - settings file is moved to /mnt/data/tsc, the sonos controller ip address needs to be reconfigured once.
