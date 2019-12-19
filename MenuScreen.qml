@@ -13,7 +13,8 @@ Screen {
 	onShown: {
 		showSonosIconToggle.isSwitchedOn = app.showSonosIcon;
 		addCustomTopRightButton("Check Connection");
-		if (poortnummerLabel.inputText.length < 1) poortnummerLabel.inputText = "5005";
+		poortnummerLabel.inputText = app.poortnummer;
+		ipadresLabel.inputText = app.ipadresLabel;
 	}
 
 	onCustomButtonClicked: {
@@ -56,6 +57,7 @@ Screen {
 	
 	function saveIpadres(text) {
 		if (text) {
+			app.ipadresLabel = text;
 			ipadresLabel.inputText = text;
 			savepath();
 		}
@@ -63,21 +65,15 @@ Screen {
 
 	function savePoortnummer(text) {
 		if (text) {
+			app.poortnummer = text;
 			poortnummerLabel.inputText = text;
 			savepath();
 		}
 	}
 
 	function savepath(){
-		var str = ipadresLabel.inputText + ":" + poortnummerLabel.inputText;
-		app.connectionPath = str;
-		var doc2 = new XMLHttpRequest();
-			doc2.onreadystatechange = function() {
-				if (doc2.readyState == XMLHttpRequest.DONE) {
-				}
-			}
-		doc2.open("PUT", "file:///HCBv2/qml/apps/sonos/pathstring.txt");
-		doc2.send(str);
+		app.connectionPath = ipadresLabel.inputText + ":" + poortnummerLabel.inputText;
+		app.saveSettings();
 	}
 	
 	Column {
