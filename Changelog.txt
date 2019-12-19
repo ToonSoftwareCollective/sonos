@@ -1,3 +1,6 @@
+1.1.5
+- fixed bug in savings user settings from the configuration screen via the Toon menu
+
 1.1.4
 - added support for speakergroups (shown as 'Grp zonename'). Volume settings will apply to all speakers in the group
 
