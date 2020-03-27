@@ -7,6 +7,7 @@ Screen {
 	screenTitle: "Audioberichten"
 
 	onShown: {
+		saveVolumeLabel.inputText = app.messageVolume;
 		updateZones();
 		fillEffectsList();
 	}
@@ -60,11 +61,30 @@ Screen {
 		}
 	}
 
+	function saveVolume(text) {
+
+		if (text) {
+			app.messageVolume = text;
+			saveVolumeLabel.inputText = app.messageVolume;
+			app.saveSettings();
+		}
+	}
+
+
+	function validateVolume(text, isFinalString) {
+		if (isFinalString) {
+			if ((parseInt(text) > 19) && (parseInt(text) < 101))
+				return null;
+			else
+				return {title: "Ongeldig volume", content: "Voer een getal in tussen 20 en 100"};
+		}
+		return null;
+	}
 
 	Text {
 		id: txtBox
 
-		text: "Selekteer een zone:"
+		text: "1. Selekteer een zone:"
 		height: isNxt ? 35 : 28
 		font.pixelSize: isNxt ? 25 : 20
 		font.family: qfont.regular.name
@@ -120,6 +140,50 @@ Screen {
 		}
 	}
 
+	Text {
+		id: txtBox2
+
+		text: "2. Kies volume audiobericht:"
+		height: isNxt ? 35 : 28
+		font.pixelSize: isNxt ? 25 : 20
+		font.family: qfont.regular.name
+		font.bold: true
+		color: colors.tileTextColor
+		width: isNxt ? 250 : 200
+		anchors.bottom: saveVolumeLabel.top
+		anchors.left: saveVolumeLabel.left
+	}
+
+	Text {
+		id: txtBox3
+
+		text: "3. Kies bericht om af te spelen:"
+		height: isNxt ? 35 : 28
+		font.pixelSize: isNxt ? 25 : 20
+		font.family: qfont.regular.name
+		font.bold: true
+		color: colors.tileTextColor
+		width: isNxt ? 250 : 200
+		anchors.bottom: txtBox.bottom
+		anchors.left: favouritesScrollableSimpleList.left
+	}
+
+	EditTextLabel4421 {
+		id: saveVolumeLabel
+		width: isNxt ? 200 : 160
+		height: isNxt ? 44 : 35
+		leftTextAvailableWidth: isNxt ? 125 : 100
+		leftText: "Volume:"
+		anchors {
+			left: txtBox.left
+			bottom: favouritesScrollableSimpleList.bottom
+		}
+
+		onClicked: {
+			qkeyboard.open("Volume (20 - 100)", saveVolumeLabel.inputText, saveVolume, validateVolume);
+		}
+	}
+
 	ListModel {
 		id: zoneNameModel
 	}
@@ -149,9 +213,9 @@ Screen {
 				onClicked: {
 					var xmlhttp = new XMLHttpRequest();
 					if (app.messageSonosName == "Alle") {
-						xmlhttp.open("GET", "http://"+app.connectionPath+"/sayall/" + item + "/nl-nl/20");
+						xmlhttp.open("GET", "http://"+app.connectionPath+"/sayall/" + item + "/nl-nl/" + app.messageVolume);
 					} else {
-						xmlhttp.open("GET", "http://"+app.connectionPath+"/"+app.messageSonosName+"/say/" + item + "/nl-nl/20");
+						xmlhttp.open("GET", "http://"+app.connectionPath+"/"+app.messageSonosName+"/say/" + item + "/nl-nl/" + app.messageVolume);
 					}
 					xmlhttp.onreadystatechange=function() {
 						if (xmlhttp.readyState == 4) {

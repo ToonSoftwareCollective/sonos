@@ -1,3 +1,6 @@
+1.2.1
+- added volume settings for audio messages
+
 1.2.0
 - added option to play text messages on Sonos speakers (Text-To-Speech)
   accessible via button 'Audiobericht' on the favourites screen
