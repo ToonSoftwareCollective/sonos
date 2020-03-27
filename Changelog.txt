@@ -1,3 +1,7 @@
+1.2.0
+- added option to play text messages on Sonos speakers (Text-To-Speech)
+  accessible via button 'Audiobericht' on the favourites screen
+
 1.1.5
 - fixed bug in savings user settings from the configuration screen via the Toon menu
 

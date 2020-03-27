@@ -18,8 +18,16 @@ Screen {
 		screenStateController.screenColorDimmedIsReachable = true;
 		sonosUpdateFavoriteList.running = false;
 	}
+
+	onCustomButtonClicked: {
+		if (app.messageScreen) {
+			 app.messageScreen.show();
+		}
+	}
 	
+
 	onShown: {
+		addCustomTopRightButton("Audiobericht");	
 		screenStateController.screenColorDimmedIsReachable = false;
 		pageThrobber.visible = true;
 		//One timer which is used for automaticly update the favorite list, which could be find below in the function description.

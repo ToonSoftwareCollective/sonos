@@ -13,12 +13,14 @@ App {
 	id: root
 	property url trayUrl : "MediaTray.qml";
 	property url menuScreenUrl : "MenuScreen.qml"
+	property url messageScreenUrl : "MessageScreen.qml"
 	property url mediaSelectZoneUrl : "MediaSelectZone.qml"
 	property url tileUrl : "SonosTile.qml"
 	property url tileUrlControl : "SonosMiniControlTile.qml"
 	property url thumbnailIcon: "qrc:/tsc/SonosThumb.png"
 	property MenuScreen menuScreen
 	property MediaScreen mediaScreen
+	property MessageScreen messageScreen
 	property MediaSelectZone mediaSelectZone
 	property FavoritesScreen favoritesScreen
 	
@@ -46,8 +48,16 @@ App {
 	property variant settings : {
 			"showSonosIcon" : "true",
 			"sonosName" : "",
-			"path" : ""
+			"path" : "",
+			"messageText" : "",
+			"messageVolume" : "",
+			"messageSonosName" : ""
 		}
+		// variables for playing the selected text
+	property variant messageTextArray : ["Hallo","Hallo daar, het eten staat klaar"]
+	property string messageSonosName : "Alle"
+	property int messageVolume : 20
+	property string messageText
 
 	//this is the main property for the complete Sonos App!
 	property string connectionPath
@@ -68,6 +78,7 @@ App {
 		registry.registerWidget("screen", p.mediaScreenUrl, this, "mediaScreen");
 		registry.registerWidget("screen", p.favoritesScreenUrl, this, "favoritesScreen");
 		registry.registerWidget("screen", menuScreenUrl, this, "menuScreen");
+		registry.registerWidget("screen", messageScreenUrl, this, "messageScreen");
 		registry.registerWidget("screen", mediaSelectZoneUrl, this, "mediaSelectZone");
 		registry.registerWidget("menuItem", null, this, null, {objectName: "sonosMenuItem", label: qsTr("Sonos"), image: thumbnailIcon, screenUrl: menuScreenUrl, weight: 120});
 		registry.registerWidget("tile", tileUrl, this, null, {thumbLabel: qsTr("Sonos"), thumbIcon: thumbnailIcon, thumbCategory: "general", thumbWeight: 30, baseTileWeight: 10, thumbIconVAlignment: "center"});
@@ -152,6 +163,9 @@ App {
 		settings["showSonosIcon"] = tmpTrayIcon;
 		settings["sonosName"] = sonosName;
 		settings["path"] = connectionPath;
+		settings["messageText"] = messageTextArray;
+		settings["messageSonosName"] = messageSonosName;
+		settings["messageVolume"] = messageVolume;
 
 		var saveFile = new XMLHttpRequest();
 		saveFile.open("PUT", "file:///mnt/data/tsc/sonos.userSettings.json");
@@ -167,6 +181,9 @@ App {
 		settings = JSON.parse(settingsString);
 		if (settings['showSonosIcon']) showSonosIcon = (settings['showSonosIcon'] == "true");
 		if (settings['sonosName']) sonosName = (settings['sonosName']);
+		if (settings['messageVolume']) messageVolume = (settings['messageVolume']);
+		if (settings['messageSonosName']) messageSonosName = (settings['messageSonosName']);
+		if (settings['messageText']) messageTextArray = (settings['messageText']);
 		if (settings['path']) {
 			connectionPath = (settings['path']);
 			if (connectionPath.length > 0) {
