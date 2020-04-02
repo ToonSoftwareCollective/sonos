@@ -1,3 +1,6 @@
+1.2.2
+- dimmableColors update
+
 1.2.1
 - added volume settings for audio messages
 
