@@ -1,5 +1,6 @@
 1.2.2
 - prevent sending a new audio message before the previous one has completed
+- dimmableColors update
 
 1.2.1
 - added volume settings for audio messages

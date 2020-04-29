@@ -69,7 +69,7 @@ Tile {
 		font.pixelSize: isNxt ? 17 : 13
 		font.family: qfont.regular.name
 		font.bold: true
-		color: colors.clockTileColor
+		color: (typeof dimmableColors !== 'undefined') ? dimmableColors.clockTileColor : colors.clockTileColor
 		wrapMode: Text.WordWrap
 		anchors {
 			top: zoneName.bottom
@@ -87,7 +87,7 @@ Tile {
 		font.pixelSize: isNxt ? 17 : 13
 		font.family: qfont.regular.name
 		font.bold: false
-		color: colors.clockTileColor
+		color: (typeof dimmableColors !== 'undefined') ? dimmableColors.clockTileColor : colors.clockTileColor
 		wrapMode: Text.WordWrap
 		anchors {
 			top: itemText.bottom
@@ -105,7 +105,7 @@ Tile {
 		font.pixelSize: isNxt ? 17 : 13
 		font.family: qfont.regular.name
 		font.bold: false
-		color: colors.clockTileColor
+		color: (typeof dimmableColors !== 'undefined') ? dimmableColors.clockTileColor : colors.clockTileColor
 		wrapMode: Text.WordWrap
 		anchors {
 			top: titleText.bottom
