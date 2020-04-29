@@ -6,6 +6,9 @@ Screen {
 	id: mediaSelectZoneScreen
 	screenTitle: "Audioberichten"
 
+	property bool waitForMessageCompletion : false
+
+
 	onShown: {
 		saveVolumeLabel.inputText = app.messageVolume;
 		updateZones();
@@ -15,10 +18,8 @@ Screen {
 	function fillEffectsList() {
 		// fill favourites list
 		favouritesScrollableSimpleList.removeAll();
-		console.log("********** Sonos: array length:" + app.messageTextArray.length);
 		for (var i = 0; i < app.messageTextArray.length; i++) {
 			favouritesScrollableSimpleList.addDevice(app.messageTextArray[i]);
-			console.log("********** Sonos: array adding:" + app.messageTextArray[i]);
 		}
 		favouritesScrollableSimpleList.refreshView();
 	}
@@ -197,7 +198,9 @@ Screen {
 		Item {
 			width: isNxt ? 500 : 400
 			height: isNxt ? 50 : 40		
-			
+			visible: (waitForMessageCompletion == false)
+
+
 			//name and number showed in the playlist
 			
 			StandardButton {
@@ -211,6 +214,7 @@ Screen {
 					topMargin: 10
 				}
 				onClicked: {
+					waitForMessageCompletion = true;
 					var xmlhttp = new XMLHttpRequest();
 					if (app.messageSonosName == "Alle") {
 						xmlhttp.open("GET", "http://"+app.connectionPath+"/sayall/" + item + "/nl-nl/" + app.messageVolume);
@@ -228,6 +232,7 @@ Screen {
 									}
 								}
 								qdialog.showDialog(qdialog.SizeSmall, "Sonos mededeling", messageResponse, "Sluiten");
+								waitForMessageCompletion = false;
 							}
 						}
 					}

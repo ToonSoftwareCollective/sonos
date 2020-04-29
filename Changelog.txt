@@ -1,3 +1,6 @@
+1.2.2
+- prevent sending a new audio message before the previous one has completed
+
 1.2.1
 - added volume settings for audio messages
 
