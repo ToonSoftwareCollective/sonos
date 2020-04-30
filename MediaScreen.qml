@@ -52,6 +52,32 @@ Screen {
 		return title
 	}
 
+	function formatItemName(item) {
+
+		var queueItemArtist = " ";
+		var queueItemTitle = " ";
+		try {
+			if (app.queue[item]['artist']) queueItemArtist = app.queue[item]['artist']
+		} catch(e) {
+		}
+		try {
+			if (app.queue[item]['title']) queueItemTitle = app.queue[item]['title']
+		} catch(e) {
+		}
+
+		return queueItemTitle + " - " + queueItemArtist
+	}
+
+	function formatItemTitle(item) {
+
+		var queueItemTitle = " ";
+		try {
+			if (app.queue[item]['title']) queueItemTitle = app.queue[item]['title']
+		} catch(e) {
+		}
+		return queueItemTitle
+	}
+
 	//this is the item for the now playing image
 	StyledRectangle {
 		id: nowPlaying
@@ -246,11 +272,11 @@ Screen {
 			Text {
 				id: listItemText
 
-				text: app.queue[item]['name'] + " - " + app.queue[item]['artist']
+				text: formatItemName(item)
 				font.pixelSize: isNxt ? 20 : 16
 				font.family: qfont.regular.name
-				font.bold: (itemText.text == app.queue[item]['title']) ? true:false
-				color: (itemText.text == app.queue[item]['title']) ? colors.wifiActiveNetwork:colors.foreground
+				font.bold: (itemText.text == formatItemTitle(item)) ? true:false
+				color: (itemText.text == formatItemTitle(item)) ? colors.wifiActiveNetwork:colors.foreground
 
 				wrapMode: Text.WrapAnywhere
 				maximumLineCount: 1
@@ -366,6 +392,7 @@ Screen {
 
 	//This function is to setup the playlist, export the information to: PlaylistItemsJS and configure the scrollable list (refresh and everything).
 	function updateQueue() {
+
 		var xmlhttp = new XMLHttpRequest();
 		xmlhttp.onreadystatechange=function() {
 			if (xmlhttp.readyState == 4) {

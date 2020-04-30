@@ -207,8 +207,8 @@ App {
 				if (xmlhttp.status == 200) {
 					var response = JSON.parse(xmlhttp.responseText);
 					if (response['currentTrack']['type'] == "track"){
-						actualTitle = response['currentTrack']['title'];
-						actualArtist = response['currentTrack']['artist'];
+						if (response['currentTrack']['title']) actualTitle = response['currentTrack']['title'];
+						if (response['currentTrack']['artist']) actualArtist = response['currentTrack']['artist'];
 						if ('absoluteAlbumArtUri' in response['currentTrack']) {
 							var tmpNowPlayingImage = response['currentTrack']['absoluteAlbumArtUri'].replace("https://", "http://");
 						} else {

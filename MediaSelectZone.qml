@@ -27,17 +27,19 @@ Screen {
 					if (response.length > 0) {
 						zoneNameModel.clear();
 						for (var i = 0; i < response.length; i++) {
+							actualArtist = "?";
 							if (response[i]["coordinator"]["state"]['currentTrack']['type'] == "track"){
-								actualArtist = response[i]["coordinator"]["state"]['currentTrack']['artist'];
+								if (response[i]["coordinator"]["state"]['currentTrack']['artist']) actualArtist = response[i]["coordinator"]["state"]['currentTrack']['artist'];
 							}
 							if (response[i]["coordinator"]["state"]['currentTrack']['type'] == "radio"){
-								actualArtist = response[i]["coordinator"]["state"]['currentTrack']['stationName'];
+								if (response[i]["coordinator"]["state"]['currentTrack']['stationName']) actualArtist = response[i]["coordinator"]["state"]['currentTrack']['stationName'];
 							}
 							if (response[i]["members"].length > 1) {
 								tmpIsGroup = "yes"
 							} else {
 								tmpIsGroup = "no"
 							}
+							console.log("SelectZone:" + i + "-" + "zoneName:" + response[i]["coordinator"]["roomName"] + ",playbackState:" + response[i]["coordinator"]["state"]["playbackState"] + ", volume:" + response[i]["coordinator"]["groupState"]["volume"] + ", artist:" + actualArtist + ", isGroup:" + tmpIsGroup);
 							zoneNameModel.append({zoneName: response[i]["coordinator"]["roomName"], playbackState: response[i]["coordinator"]["state"]["playbackState"], volume: response[i]["coordinator"]["groupState"]["volume"], artist: actualArtist, isGroup: tmpIsGroup});
 						}
 					} 

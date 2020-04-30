@@ -1,5 +1,6 @@
 1.2.2
 - prevent sending a new audio message before the previous one has completed
+- code cleanup to remove numerous warnings written to logfile
 - dimmableColors update
 
 1.2.1
