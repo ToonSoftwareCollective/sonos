@@ -20,7 +20,7 @@ Rectangle
 		x: isNxt ? 25 : 20
 		onClicked: {
 			app.messageSonosName = zoneName;
-			app.savesettings();
+			app.saveSettings();
 		}
 	}
 }

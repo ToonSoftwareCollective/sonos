@@ -12,6 +12,7 @@ Screen {
 	
 	onShown: {
 		showSonosIconToggle.isSwitchedOn = app.showSonosIcon;
+		voetbalToggle.isSwitchedOn = app.playFootballScores;
 		addCustomTopRightButton("Check Connection");
 		poortnummerLabel.inputText = app.poortnummer;
 		ipadresLabel.inputText = app.ipadresLabel;
@@ -226,23 +227,40 @@ Screen {
 			}
 		}
 	}
-	
-	StandardButton {
-		id: btninfo
-		text: "?"
+		
+	//Next part is to allow new results from live matches of your favourite teams to be played over the Sonos speakers.
+
+	Text {
+		id: voetbalText
 		anchors {
-			left: showSonosIconToggle.right
-			leftMargin: 15
-			top: systrayText.bottom
-			topMargin: 10
+			left: parent.left
+			leftMargin: 44
+			top: showSonosIconToggle.bottom
+			topMargin: 30
 		}
-		onClicked: {
-			qdialog.showDialog(qdialog.SizeLarge, qsTr("Informatie"), qsTr("De vraag betreft het icoon wat helemaal boven in op het hoofdscherm wordt getoond, indien u dit icoon wenst te zien zorg dat hij aan staat, zo niet uiteraard uit. <br><br> Bij het aan of uit zetten van deze knop, bevestigd u de keuze voor het laten zien van het icoon.") , qsTr("Sluiten"));
+		font {
+			pixelSize: qfont.bodyText
+			family: qfont.regular.name
+		}
+		wrapMode: Text.WordWrap
+		text: "Voetbal tussenstanden afspelen (configureren via voetbal app)?"
+	}
+	
+		OnOffToggle {
+		id: voetbalToggle
+		height: 36
+		anchors {
+			left: voetbalText.left
+			top: voetbalText.bottom
+			topMargin: 15
+		}
+		leftIsSwitchedOn: false
+		onSelectedChangedByUser: {
+			if (isSwitchedOn) {
+				app.saveplayScores("Yes")
+			} else {
+				app.saveplayScores("No")
+			}
 		}
 	}
-
-	
 }
-
-//in this section is no timer required!
-//created by Harmen Bartelink

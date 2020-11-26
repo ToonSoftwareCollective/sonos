@@ -27,6 +27,7 @@ App {
 	//next property's are used for the visibility of the systray icon.
 	property SystrayIcon mediaTray
 	property bool showSonosIcon : true
+	property bool playFootballScores : true
 	property string playbackState
 	property string timeStr
 	property string dateStr
@@ -51,7 +52,8 @@ App {
 			"path" : "",
 			"messageText" : "",
 			"messageVolume" : "",
-			"messageSonosName" : ""
+			"messageSonosName" : "",
+			"voetbalTussenstanden" : ""
 		}
 		// variables for playing the selected text
 	property variant messageTextArray : ["Hallo","Hallo daar, het eten staat klaar"]
@@ -150,6 +152,12 @@ App {
 			mediaTray.hide();
 		}
 	}
+
+	//this is the save of the voetbal toggle which could be found in the menuscreen.
+	function saveplayScores(text) {
+		playFootballScores = (text == "Yes");
+   		saveSettings();
+	}
 	
 	function saveSettings() {
 
@@ -159,6 +167,12 @@ App {
 		} else {
 			tmpTrayIcon = "false";
 		}
+		var tmpVoetbal = "";
+		if (playFootballScores == true) {
+			tmpVoetbal = "true";
+		} else {
+			tmpVoetbal = "false";
+		}
 
 		settings["showSonosIcon"] = tmpTrayIcon;
 		settings["sonosName"] = sonosName;
@@ -166,6 +180,7 @@ App {
 		settings["messageText"] = messageTextArray;
 		settings["messageSonosName"] = messageSonosName;
 		settings["messageVolume"] = messageVolume;
+		settings["voetbalTussenstanden"] = tmpVoetbal;
 
 		var saveFile = new XMLHttpRequest();
 		saveFile.open("PUT", "file:///mnt/data/tsc/sonos.userSettings.json");
@@ -184,6 +199,7 @@ App {
 		if (settings['messageVolume']) messageVolume = (settings['messageVolume']);
 		if (settings['messageSonosName']) messageSonosName = (settings['messageSonosName']);
 		if (settings['messageText']) messageTextArray = (settings['messageText']);
+		if (settings['voetbalTussenstanden']) playFootballScores = (settings['voetbalTussenstanden'] == "true");
 		if (settings['path']) {
 			connectionPath = (settings['path']);
 			if (connectionPath.length > 0) {
@@ -194,7 +210,6 @@ App {
 			}
 			updateAvailableZones();
 		}
-		console.log("********** Sonos - path:" + settings['path']);
 	}
 	
 

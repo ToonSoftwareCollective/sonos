@@ -8,6 +8,25 @@ Screen {
 
 	property bool waitForMessageCompletion : false
 
+	Component.onCompleted: {   //get automatic updates from your favourite football teams (via the voetbal app)
+		try{
+			animationscreen.animationsSignal.connect(playMessage);
+		} catch(e) {
+		}
+	}
+
+	function playMessage(appName, appArguments) {
+
+		if ((appName == "sonos") && app.playFootballScores) {	
+			var xmlhttp = new XMLHttpRequest();
+			if (app.messageSonosName == "Alle") {
+				xmlhttp.open("GET", "http://"+app.connectionPath+"/sayall/" + appArguments + "/nl-nl/" + app.messageVolume);
+			} else {
+				xmlhttp.open("GET", "http://"+app.connectionPath+"/"+app.messageSonosName+"/say/" + appArguments + "/nl-nl/" + app.messageVolume);
+			}
+			xmlhttp.send();
+		}
+	}
 
 	onShown: {
 		saveVolumeLabel.inputText = app.messageVolume;
