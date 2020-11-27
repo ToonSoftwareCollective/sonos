@@ -1,5 +1,5 @@
-1.2.3
-- the default room to play audio messages was not saved in the user settings file
+1.2.4
+- bug fix: the default room to play audio messages was not saved in the user settings file
 - support for the voetbal app added: your Sonos speaker will tell you the real-time game updates (goals) for matches of your favorite teams.
   added a switch in the configscreen to enable/disable this feature (enabled by default)
   To use it you also have to install the voetbal app and select your favourite teams there.

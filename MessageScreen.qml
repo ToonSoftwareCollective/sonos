@@ -10,7 +10,7 @@ Screen {
 
 	Component.onCompleted: {   //get automatic updates from your favourite football teams (via the voetbal app)
 		try{
-			animationscreen.animationsSignal.connect(playMessage);
+			tscsignals.tscSignal.connect(playMessage);
 		} catch(e) {
 		}
 	}
