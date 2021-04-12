@@ -379,7 +379,8 @@ Screen {
 			right: volumeUp.right
 		}
 		onClicked: {
-			if (app.mediaSelectZone)	
+			if (app.mediaSelectZone)
+				app.zoneToSelect = "sonosName";	
 				app.mediaSelectZone.show();
 		}
 	}

@@ -31,8 +31,13 @@ Rectangle
 		fontPixelSize: isNxt ? 25 : 20
 		x: isNxt ? 25 : 20
 		onClicked: {
-			app.sonosName = zoneName;
-			app.sonosNameIsGroup = (isGroup == "yes");
+			if (app.zoneToSelect == "sonosName") {
+				app.sonosName = zoneName;
+				app.sonosNameIsGroup = (isGroup == "yes");
+			}
+			if (app.zoneToSelect == "sonosNameVoetbalApp") {
+				app.sonosNameVoetbalApp = zoneName;
+			}
 			app.saveSettings();
 			hide();
 		}

@@ -5,7 +5,7 @@ import qb.base 1.0
 
 SystrayIcon {
 	id: mediaSystrayIcon
-	visible: true
+	visible: app.showSonosIcon
 	posIndex: 9000
 	property string objectName: "sonosSystray"
 

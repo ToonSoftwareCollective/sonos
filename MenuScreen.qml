@@ -13,6 +13,9 @@ Screen {
 	onShown: {
 		showSonosIconToggle.isSwitchedOn = app.showSonosIcon;
 		voetbalToggle.isSwitchedOn = app.playFootballScores;
+		if (app.playFootballScores) {
+			if (app.sonosNameVoetbalApp.length < 2) app.sonosNameVoetbalApp = "Klik om een zone te selekteren voor de standen";
+		}
 		addCustomTopRightButton("Check Connection");
 		poortnummerLabel.inputText = app.poortnummer;
 		ipadresLabel.inputText = app.ipadresLabel;
@@ -246,7 +249,7 @@ Screen {
 		text: "Voetbal tussenstanden afspelen (configureren via voetbal app)?"
 	}
 	
-		OnOffToggle {
+	OnOffToggle {
 		id: voetbalToggle
 		height: 36
 		anchors {
@@ -258,9 +261,29 @@ Screen {
 		onSelectedChangedByUser: {
 			if (isSwitchedOn) {
 				app.saveplayScores("Yes")
+				if (app.sonosNameVoetbalApp.length < 2) app.sonosNameVoetbalApp = "Klik om een zone te selekteren voor de standen"
 			} else {
 				app.saveplayScores("No")
 			}
 		}
 	}
+
+	StandardButton {
+		id: btnZone
+		text: app.sonosNameVoetbalApp
+		fontPixelSize: isNxt ? 25 : 20
+		anchors {
+			bottom: voetbalToggle.bottom
+			left: voetbalToggle.right
+			leftMargin: isNxt ? 25 : 20
+		}
+		onClicked: {
+			if (app.mediaSelectZone) {
+				app.zoneToSelect = "sonosNameVoetbalApp";	
+				app.mediaSelectZone.show();
+			}
+		}
+		visible: voetbalToggle.isSwitchedOn
+	}
+
 }

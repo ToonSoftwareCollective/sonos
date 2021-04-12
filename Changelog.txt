@@ -1,3 +1,6 @@
+1.2.5
+- added a few more options in the Menu - Sonos configscreen for the voetbal app integration
+
 1.2.4
 - bug fix: the default room to play audio messages was not saved in the user settings file
 - support for the voetbal app added: your Sonos speaker will tell you the real-time game updates (goals) for matches of your favorite teams.

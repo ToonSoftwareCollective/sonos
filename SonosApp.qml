@@ -36,6 +36,8 @@ App {
 	property variant queue : []
 	property variant sonoslist : []
 	property string sonosName
+	property string sonosNameVoetbalApp
+	property string zoneToSelect
 	property bool sonosNameIsGroup : false
 	property string ipadresLabel
 	property string poortnummer
@@ -49,6 +51,7 @@ App {
 	property variant settings : {
 			"showSonosIcon" : "true",
 			"sonosName" : "",
+			"sonosNameVoetbalApp" : "",
 			"path" : "",
 			"messageText" : "",
 			"messageVolume" : "",
@@ -176,6 +179,7 @@ App {
 
 		settings["showSonosIcon"] = tmpTrayIcon;
 		settings["sonosName"] = sonosName;
+		settings["sonosNameVoetbalApp"] = sonosNameVoetbalApp;
 		settings["path"] = connectionPath;
 		settings["messageText"] = messageTextArray;
 		settings["messageSonosName"] = messageSonosName;
@@ -196,6 +200,7 @@ App {
 		settings = JSON.parse(settingsString);
 		if (settings['showSonosIcon']) showSonosIcon = (settings['showSonosIcon'] == "true");
 		if (settings['sonosName']) sonosName = (settings['sonosName']);
+		if (settings['sonosNameVoetbalApp']) sonosName = (settings['sonosNameVoetbalApp']);
 		if (settings['messageVolume']) messageVolume = (settings['messageVolume']);
 		if (settings['messageSonosName']) messageSonosName = (settings['messageSonosName']);
 		if (settings['messageText']) messageTextArray = (settings['messageText']);

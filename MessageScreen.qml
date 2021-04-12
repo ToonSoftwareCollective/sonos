@@ -19,11 +19,7 @@ Screen {
 
 		if ((appName == "sonos") && app.playFootballScores) {	
 			var xmlhttp = new XMLHttpRequest();
-			if (app.messageSonosName == "Alle") {
-				xmlhttp.open("GET", "http://"+app.connectionPath+"/sayall/" + appArguments + "/nl-nl/" + app.messageVolume);
-			} else {
-				xmlhttp.open("GET", "http://"+app.connectionPath+"/"+app.messageSonosName+"/say/" + appArguments + "/nl-nl/" + app.messageVolume);
-			}
+			xmlhttp.open("GET", "http://"+app.connectionPath+"/"+app.sonosNameVoetbalApp+"/say/" + appArguments + "/nl-nl/" + app.messageVolume);
 			xmlhttp.send();
 		}
 	}
