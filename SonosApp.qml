@@ -200,7 +200,7 @@ App {
 		settings = JSON.parse(settingsString);
 		if (settings['showSonosIcon']) showSonosIcon = (settings['showSonosIcon'] == "true");
 		if (settings['sonosName']) sonosName = (settings['sonosName']);
-		if (settings['sonosNameVoetbalApp']) sonosName = (settings['sonosNameVoetbalApp']);
+		if (settings['sonosNameVoetbalApp']) sonosNameVoetbalApp = (settings['sonosNameVoetbalApp']);
 		if (settings['messageVolume']) messageVolume = (settings['messageVolume']);
 		if (settings['messageSonosName']) messageSonosName = (settings['messageSonosName']);
 		if (settings['messageText']) messageTextArray = (settings['messageText']);
