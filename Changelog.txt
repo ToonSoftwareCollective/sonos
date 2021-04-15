@@ -1,4 +1,4 @@
-1.2.5
+1.2.6
 - added a few more options in the Menu - Sonos configscreen for the voetbal app integration
 
 1.2.4
