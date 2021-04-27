@@ -140,7 +140,7 @@ Tile {
 		id: prevButton
 		anchors {
 			left: volumeDown.right
-			leftMargin: isNxt ? 4 : 2
+			leftMargin: isNxt ? 16 : 12
 			bottom: volumeDown.bottom
 		}
 
@@ -155,7 +155,7 @@ Tile {
 		id: pauseButton
 		anchors {
 			left: prevButton.right
-			leftMargin: isNxt ? 4 : 2
+			leftMargin: isNxt ? 16 : 12
 			bottom: prevButton.bottom
 		}
 
@@ -172,7 +172,7 @@ Tile {
 		id: playButton
 		anchors {
 			left: prevButton.right
-			leftMargin: isNxt ? 4 : 2
+			leftMargin: isNxt ? 16 : 12
 			bottom: pauseButton.bottom
 		}
 
@@ -184,48 +184,13 @@ Tile {
 			}
 		visible: !dimState && app.playButtonVisible
 	}
-
-	IconButton {
-		id: shuffleOnButton
-		anchors {
-			left: playButton.right
-			leftMargin: isNxt ? 4 : 2
-			bottom: playButton.bottom
-		}
-
-		iconSource: "qrc:/tsc/shuffle_on.png"
-		onClicked: {
-			app.shuffleButtonVisible = false;
-			app.shuffleOnButtonVisible = false;
-			app.simpleSynchronous("http://"+app.connectionPath+"/"+app.sonosName+"/shuffle/off");
-		}
-		visible: !dimState && app.shuffleButtonVisible
-	}
-	
-	IconButton {
-		id: shuffleButton
-		anchors {
-			left: playButton.right
-			leftMargin: isNxt ? 4 : 2
-			bottom: playButton.bottom
-		}
-
-		iconSource: "qrc:/tsc/shuffle.png"
-		onClicked: {
-			app.shuffleButtonVisible = false;
-			app.shuffleOnButtonVisible = false;
-			app.simpleSynchronous("http://"+app.connectionPath+"/"+app.sonosName+"/shuffle/on");
-		
-		}
-		visible: !dimState && app.shuffleOnButtonVisible
-	}
 	
 	IconButton {
 		id: nextButton
 		anchors {
-			left: shuffleButton.right
-			leftMargin: isNxt ? 4 : 2
-			bottom: shuffleButton.bottom
+			left: playButton.right
+			leftMargin: isNxt ? 16 : 12
+			bottom: playButton.bottom
 		}
 
 		iconSource: "qrc:/tsc/right.png"
@@ -242,7 +207,7 @@ Tile {
 		anchors {
 			bottom: nextButton.bottom
 			left: nextButton.right
-			leftMargin: isNxt ? 4 : 2
+			leftMargin: isNxt ? 16 : 12
 		}
 
 		iconSource: "qrc:/tsc/volume_up_small.png"

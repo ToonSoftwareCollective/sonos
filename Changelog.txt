@@ -1,3 +1,7 @@
+1.2.7
+- removed shuffle button from tile to make more room for the other buttons
+  shuffle button still available on the main screen
+
 1.2.6
 - added a few more options in the Menu - Sonos configscreen for the voetbal app integration
 
