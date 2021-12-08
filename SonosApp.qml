@@ -227,6 +227,8 @@ App {
 				if (xmlhttp.status == 200) {
 					var response = JSON.parse(xmlhttp.responseText);
 					if (response['currentTrack']['type'] == "track"){
+						actualArtist = "";
+						actualTitle = "";
 						if (response['currentTrack']['title']) actualTitle = response['currentTrack']['title'];
 						if (response['currentTrack']['artist']) actualArtist = response['currentTrack']['artist'];
 						if ('absoluteAlbumArtUri' in response['currentTrack']) {

@@ -1,3 +1,6 @@
+1.2.8
+- FIX: if the 'title' or 'artist' tag is missing the value from the previous track was still shown on the tile
+
 1.2.7
 - removed shuffle button from tile to make more room for the other buttons
   shuffle button still available on the main screen
