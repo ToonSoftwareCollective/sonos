@@ -63,6 +63,10 @@ App {
 	property string messageSonosName : "Alle"
 	property int messageVolume : 20
 	property string messageText
+	property int trackDuration
+	property int trackElapsedTime 
+	property bool showSlider : false
+	property bool showSliderTime : false
 
 	//this is the main property for the complete Sonos App!
 	property string connectionPath
@@ -227,10 +231,19 @@ App {
 				if (xmlhttp.status == 200) {
 					var response = JSON.parse(xmlhttp.responseText);
 					if (response['currentTrack']['type'] == "track"){
+						showSlider = true;
+						showSliderTime = true;
 						actualArtist = "";
 						actualTitle = "";
 						if (response['currentTrack']['title']) actualTitle = response['currentTrack']['title'];
 						if (response['currentTrack']['artist']) actualArtist = response['currentTrack']['artist'];
+						if (response['currentTrack']['duration']) trackDuration = response['currentTrack']['duration'];
+						if (response['elapsedTime']) {
+							if (!mediaScreen.positionIndicatorDragActive) { //do not update elapsedTime when positionIndicator is being dragged
+								trackElapsedTime = response['elapsedTime'];
+								mediaScreen.positionIndicatorX = Math.floor((trackElapsedTime / trackDuration) * mediaScreen.positionIndicatorWidth);
+							}
+						}
 						if ('absoluteAlbumArtUri' in response['currentTrack']) {
 							var tmpNowPlayingImage = response['currentTrack']['absoluteAlbumArtUri'].replace("https://", "http://");
 						} else {
@@ -241,6 +254,8 @@ App {
 						}
 					}
 					if (response['currentTrack']['type'] == "radio"){
+						showSlider = false;
+						showSliderTime = false;
 						actualArtist = response['currentTrack']['stationName'];
 						actualTitle = "";
 						if (response['playbackState'] == "PLAYING") {

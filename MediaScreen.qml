@@ -16,6 +16,10 @@ Screen {
 	property string itemType
 	property int volumeState
 	property alias queueTimerControl : queueTimer
+	property alias positionIndicatorWidth : volumeBar.width
+	property alias positionIndicatorLeft : volumeBar.left
+	property bool positionIndicatorDragActive : falso
+	property int positionIndicatorX
 	
 	onCustomButtonClicked: {
 		if (app.favoritesScreen) {
@@ -120,18 +124,17 @@ Screen {
 		horizontalAlignment: Text.AlignHCenter
 		anchors {
 			top: parent.top
-			topMargin: isNxt ? 350 : 280
+			topMargin: isNxt ? 325 : 260
 			left: parent.left
-			leftMargin: isNxt ? 40 : 32
 		}
-		width: isNxt ? 250 : 200
+		width: isNxt ? 325 : 260
 	}
 
 	Text {
 		id: itemText
 
 		text: app.actualTitle
-		font.pixelSize: isNxt ? 20 : 16
+		font.pixelSize: isNxt ? 15 : 12
 		font.family: qfont.regular.name
 		font.bold: true
 		color: colors.tileTextColor
@@ -142,9 +145,8 @@ Screen {
 			top: itemArtist.bottom
 			topMargin: isNxt ? 5 : 4
 			left: parent.left
-			leftMargin: isNxt ? 40 : 32
 		}
-		width: isNxt ? 250 : 200
+		width: isNxt ? 325 : 260
 	}
 	
 	//below you'll find the iconbuttons which are controlling your device (previous, play/pause, shuffle on and shuffle off and the next button)
@@ -242,7 +244,6 @@ Screen {
 
 		iconSource: "qrc:/tsc/right.png"
 		onClicked: {
-			console.log("next");
 			app.simpleSynchronous("http://"+app.connectionPath+"/"+app.sonosName+"/next");
 		}
 	}
@@ -385,12 +386,95 @@ Screen {
 		}
 	}
 	
+	//this is the picture behind the slider.
+	Image {
+		id: volumeBar
+		source: "drawables/volumeBarTile.png"
+		width: isNxt ? 325 : 260
+		height: isNxt ? 20 : 16
+		anchors {
+			bottom: volumeDown.top
+			bottomMargin: isNxt ? 20 : 16
+			left: parent.left
+		}
+		visible: app.showSlider
+	}
 	
-	function pad(n, width) {
-		n = n + '';
-		return n.length >= width ? n : new Array(width - n.length + 1).join('0') + n;
+	//this image is the slider indicator. 
+	Image {
+		id: positionIndicator
+		source: "drawables/volumeIndicator.png"
+		height: isNxt ? 35 : 28
+		width: isNxt ? 35 : 28
+		x: positionIndicatorX
+		y: isNxt ? 417 : 333
+	
+		MouseArea {
+			id: mouseArea
+			anchors.fill: parent
+			drag {
+				target: positionIndicator
+				axis: Drag.XAxis
+				minimumX: 0
+				maximumX: isNxt ? 290 : 232
+			}
+			property bool dragActive: drag.active
+       			onDragActiveChanged: {
+        			if (!drag.active) {
+					positionIndicatorDragActive = false;
+					var xPos = positionIndicator.x;
+					if (xPos < 0) xPos = 0;
+					app.simpleSynchronous("http://"+app.connectionPath+"/"+app.sonosName+"/timeseek/" + Math.floor(xPos * app.trackDuration / volumeBar.width)); 
+					app.showSlider = false;
+				} else {
+					positionIndicatorDragActive = true;
+				} 
+			}
+		}
+		onXChanged: {
+			if (mouseArea.drag.active) {
+				app.trackElapsedTime = Math.floor(x * app.trackDuration / volumeBar.width); 
+			}
+		}
+		visible: app.showSlider
 	}
 
+	Text {
+		id: trackLength
+
+		text: new Date(app.trackDuration * 1000).toISOString().substr(14, 5)
+		font.pixelSize: isNxt ? 13 : 10
+		font.family: qfont.regular.name
+		font.bold: true
+		color: colors.tileTextColor
+
+		anchors {
+			bottom: volumeBar.top
+			bottomMargin: isNxt ? 5 : 4
+			right: volumeBar.right
+			rightMargin: isNxt ? -20 : -16
+		}
+		visible: app.showSlider
+	}
+
+	Text {
+		id: trackPositionTime
+
+		text: new Date(app.trackElapsedTime * 1000).toISOString().substr(14, 5)
+		font.pixelSize: isNxt ? 13 : 10
+		font.family: qfont.regular.name
+		font.bold: true
+		color: colors.tileTextColor
+
+		anchors {
+			bottom: volumeBar.top
+			bottomMargin: isNxt ? 5 : 4
+			right: positionIndicator.right
+		}
+		visible: app.showSlider && ((positionIndicatorX / volumeBar.width) < 0.85)
+	}
+
+		
 	//This function is to setup the playlist, export the information to: PlaylistItemsJS and configure the scrollable list (refresh and everything).
 	function updateQueue() {
 

@@ -1,3 +1,6 @@
+1.2.9
+- added position slider on the big screen to move position within a track
+
 1.2.8
 - FIX: if the 'title' or 'artist' tag is missing the value from the previous track was still shown on the tile
 
