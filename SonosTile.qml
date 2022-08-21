@@ -60,6 +60,26 @@ Tile {
 		}
 		visible: !dimState && (app.nowPlayingImage.length > 5)
 	}
+
+	
+	//shows you the now playing artist / number.
+	Text {
+		id: itemPosition
+
+		text: new Date(app.trackElapsedTime * 1000).toISOString().substr(14, 5) + " (" + new Date(app.trackDuration * 1000).toISOString().substr(14, 5) + ")"
+		font.pixelSize: isNxt ? 15 : 12
+		font.family: qfont.regular.name
+		font.bold: true
+		color: (typeof dimmableColors !== 'undefined') ? dimmableColors.clockTileColor : colors.clockTileColor
+		wrapMode: Text.WordWrap
+		anchors {
+			top: dimState ? pauseText.bottom : nowPlaying.bottom
+			topMargin: 1
+			left: dimState ? itemText.left : nowPlaying.left
+		}
+		width: 100
+		visible: app.showSlider 
+	}
 	
 	//shows you the now playing artist / number.
 	Text {

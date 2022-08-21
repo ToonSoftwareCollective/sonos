@@ -279,6 +279,11 @@ App {
 					shuffleOnButtonVisible = !shuffleButtonVisible;
 					pauseButtonVisible = (playbackState == "PLAYING");
 					playButtonVisible = !pauseButtonVisible;
+					if (pauseButtonVisible) {
+						sonosTrackTimer.start()
+					} else {
+						sonosTrackTimer.stop()
+					} 
 				}
 			}
 		}
@@ -303,6 +308,14 @@ App {
 		}
 	}
 	
+	function addTrackTimer() {
+		trackElapsedTime = trackElapsedTime + 1;
+		if (trackElapsedTime > trackDuration) trackElapsedTime = trackDuration;
+		mediaScreen.positionIndicatorX = Math.floor((trackElapsedTime / trackDuration) * mediaScreen.positionIndicatorWidth);
+
+	}
+
+
 	Timer {
 		id: sonosPlayInfoTimer
 		interval: 5000
@@ -310,6 +323,15 @@ App {
 		running: true
 		repeat: true
 		onTriggered: readSonosState()
+	}
+	
+	Timer {
+		id: sonosTrackTimer
+		interval: 1000
+		triggeredOnStart: false
+		running: false 
+		repeat: true
+		onTriggered: addTrackTimer()
 	}
 }
 //created by Harmen Bartelink, further enhanced by Toonz

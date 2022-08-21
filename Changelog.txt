@@ -1,3 +1,6 @@
+1.2.10
+- added position indicator (time) of currently playing song on tile and main screen
+
 1.2.9
 - added position slider on the big screen to move position within a track
 
