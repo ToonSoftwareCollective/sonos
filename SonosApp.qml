@@ -75,7 +75,6 @@ App {
 		}
 
 	property variant spotifyToken : {
-			"grant_type": "client_credentials",
 			"access_token" : ""
 		}
 	property string musicSource : "Sonos"   // either "Sonos"or "Spotify"
