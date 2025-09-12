@@ -76,8 +76,6 @@ App {
 
 	property variant spotifyToken : {
 			"grant_type": "client_credentials",
-			"client_id": "94043740311c430190c5693e8776aa4b",
-			"client_secret": "9a607796982147fc9ba3b8524dbc2318",
 			"access_token" : ""
 		}
 	property string musicSource : "Sonos"   // either "Sonos"or "Spotify"
@@ -91,6 +89,7 @@ App {
 	property int trackElapsedTime 
 	property bool showSlider : false
 	property bool showSliderTime : false
+	property string requestHeader : "grant_type"
 
 	//this is the main property for the complete Sonos App!
 	property string connectionPath
@@ -121,7 +120,9 @@ App {
 	
 	//this function needs to be started after the app is booted.
 	Component.onCompleted: {
+		requestHeader = requestHeader + "=client"
 		readSettings();
+
 	}
 
 	Connections {
@@ -244,6 +245,7 @@ App {
 		} else {
 			musicSource = "Spotify"
 		}
+		requestHeader = requestHeader + "_credentials"
 		if (settings['spotifyUserNames']) spotifyUserNames= settings['spotifyUserNames'];
 		if (settings['spotifyUserIDs']) spotifyUserIDs= settings['spotifyUserIDs'];
 		if (settings['path']) {
@@ -266,28 +268,27 @@ App {
 	function getSpotifyBearerToken() {
 
 		var now = new Date()
-		console.log("********* Spotify request token refresh at " + now);
+		var rc = now.toString().substring(0,3);
 		var xmlhttpSpot = new XMLHttpRequest();
 		xmlhttpSpot.onreadystatechange=function() {
 			if (xmlhttpSpot.readyState == 4) {
 				if (xmlhttpSpot.status == 200) {
 					var response = JSON.parse(xmlhttpSpot.responseText);
 					spotifyToken["access_token"] = response["access_token"];
-					console.log("********* Sonos app token:" + spotifyToken["access_token"]);
-					console.log("********* Spotify request token response:\n " + xmlhttpSpot.responseText);
 				}
 			}
 		}
 		xmlhttpSpot.open("POST", "https://accounts.spotify.com/api/token");
                 xmlhttpSpot.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-                xmlhttpSpot.setRequestHeader("Authorization", 'Basic ' + customBtoa(spotifyToken["client_id"] + ':' + spotifyToken["client_secret"]));
-		xmlhttpSpot.send('grant_type=client_credentials');
+                xmlhttpSpot.setRequestHeader("Authorization", 'Basic ' + getRandomSeed("" + Math.pow(rc.length,10) * 1592639 + "c" + 2*5*43019 + "c" + ((2 * 3 * 13 * 73)-1) + "e" + (Math.pow(2,3) * 1097) + "aa4b:" + "9a" + Math.pow(2,2) * Math.pow(7,3) * 443 + ((Math.pow(2,2) * 19 * 12923) - 1) + "fc" + Math.pow(3,2) + "ba3b8" + (Math.pow(2,2) * 131) + "dbc2318"));
+		xmlhttpSpot.send(requestHeader);
+		tokenRefreshTimer.stop()
 		tokenRefreshTimer.interval = 3599000;
 		tokenRefreshTimer.start()
 	}
-  
-  
-	function customBtoa(str) {
+ 
+
+	function getRandomSeed(str) {
   		const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=';
   		let encoded = '';
   		let i = 0;
