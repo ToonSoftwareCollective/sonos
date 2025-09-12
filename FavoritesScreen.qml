@@ -5,7 +5,6 @@ import qb.components 1.0
 Screen {
 	id: favoritesScreen
 	screenTitleIconUrl: "qrc:/tsc/Sonos_Favorites.png";
-	screenTitle: "Sonos Favorieten";
 	hasHomeButton: false
 
 	property int counterFav
@@ -16,7 +15,6 @@ Screen {
 	
 	onHidden: {
 		screenStateController.screenColorDimmedIsReachable = true;
-		sonosUpdateFavoriteList.running = false;
 	}
 
 	onCustomButtonClicked: {
@@ -30,12 +28,20 @@ Screen {
 		addCustomTopRightButton("Audiobericht");	
 		screenStateController.screenColorDimmedIsReachable = false;
 		pageThrobber.visible = true;
-		//One timer which is used for automaticly update the favorite list, which could be find below in the function description.
-		sonosUpdateFavoriteList.running = true;
 		updateFavoriteslist();
 		updateLinein();
 		stationNameCheck();
 		updatePlaylists();
+	}
+	
+	//Required to use the Sonos HTTP API and to start every request in the functions.
+	function playlistHeaderText() {
+
+		if (app.selectedPlaylistUser == 0) {
+			return "Sonos"
+		} else {
+			return "Playlists van " + app.spotifyUserNames[app.selectedPlaylistUser -1]
+		}
 	}
 	
 	//Required to use the Sonos HTTP API and to start every request in the functions.
@@ -72,7 +78,7 @@ Screen {
 	Text {
 		id: chooseText
 
-		text: counterFav + " favorieten:"
+		text: "Sonos favorieten:"
 		font.pixelSize: isNxt ? 20 : 16
 
 		font.family: qfont.regular.name
@@ -80,29 +86,32 @@ Screen {
 
 		wrapMode: Text.WordWrap
 		anchors {
-			top: boilerScrollableSimpleList.top
+			top: favouritesScrollableSimpleList.top
 			topMargin: isNxt ? -35 : -28
-			left: boilerScrollableSimpleList.left
+			left: favouritesScrollableSimpleList.left
 		}
 		width: 450
 	}
-	Text {
-		id: chooseText2
 
-		text: counterList + " afspeellijsten:"	
-		font.pixelSize: isNxt ? 20 : 16
-
-		font.family: qfont.regular.name
-		font.bold: true
-
-		wrapMode: Text.WordWrap
+	StandardButton {
+		id: playlistUserButton
+		width: isNxt ? 325 : 260
+		radius: 5
+		text: playlistHeaderText()
+		fontPixelSize: isNxt ? 20 : 16
+		color: colors.background
 		anchors {
-			top: playlistScrollableSimpleList.top
-			topMargin: isNxt ? -35 : -28
+			top: parent.top
+			topMargin: isNxt ? 20 : 16
 			left: playlistScrollableSimpleList.left
 		}
-		width: 450
+
+		onClicked: {
+			if (app.spotifySelectUser)	
+				app.spotifySelectUser.show();
+		}
 	}
+
 	
 	//the function "updateLinein" is creating lineinURL which is needed to change the source to Line In (input device for sonos Playbar)
 	IconButton {
@@ -131,56 +140,9 @@ Screen {
 		}
 	}
 	
-	//This is the delegate of the scrollable list which have the input of the function "updateFavoriteslist"
-	Component {
-		id: brandListDelegate
-		//to make the list clickable
-		Item {
-			width: isNxt ? 450 : 360
-			height: isNxt ? 50 : 40	
-			MouseArea {
-				id: mouse_area1
-				z: 1
-				anchors.fill: parent
-				anchors.topMargin: isNxt ? -12 : -10
-				onClicked: {
-					tempId = app.favourites[item]['name'];
-					simpleSynchronous("http://"+app.connectionPath+"/"+app.sonosName+"/clearqueue");
-					simpleSynchronous("http://"+app.connectionPath+"/"+app.sonosName+"/favorite/"+tempId);
-					hide();
-				}
-			}
-			
-			Text {
-				id: listItemText
-
-				text: app.favourites[item]['name']
-				font.family: qfont.regular.name
-				font.pixelSize: isNxt ? 20 : 16
-				font.bold: ((stationName == app.favourites[item]['name'])? true:false)
-				
-				wrapMode: Text.WrapAnywhere
-				maximumLineCount: 1
-				verticalAlignment: Text.AlignVCenter
-				anchors {
-					left: parent.left
-					leftMargin: isNxt ? 20 : 16
-					top: parent.top
-					topMargin: isNxt ? 20 : 16
-				}
-				width: boilerScrollableSimpleList.width - 150
-			}
-			/*
-			Timer {
-						interval: 1000; running: true; repeat: true
-						onTriggered: time.text = Date().toString()
-			}
-			*/
-		}
-	}
 	//Property's for the scrollable list it self.
 	ScrollableSimpleList {
-		id: boilerScrollableSimpleList
+		id: favouritesScrollableSimpleList
 		width: isNxt ? 450 : 360
 		height: isNxt ? 420 : 336
 		x: isNxt ? 30 : 25
@@ -201,21 +163,37 @@ Screen {
 				verticalCenter: parent.verticalCenter
 			}
 		}
+	}
 
-		Text {
-			id: noConnectionText
-			visible: false
-			anchors {
-				horizontalCenter: parent.horizontalCenter
-				horizontalCenterOffset: isNxt ? -30 : -25
 
-				verticalCenter: parent.verticalCenter
+	//This is the delegate of the scrollable list which have the input of the function "updateFavoriteslist"
+	Component {
+		id: brandListDelegate
+
+		Item {
+			width: isNxt ? 450 : 360
+			height: isNxt ? 50 : 40	
+
+			StandardButton {
+				id: listItemButton
+				radius: 5
+				text: app.favourites[item]['name']
+				width: isNxt ? 350 : 280
+				anchors {
+					top: parent.top
+				}
+
+				onClicked: {
+					tempId = app.favourites[item]["name"];
+					simpleSynchronous("http://"+app.connectionPath+"/"+app.sonosName+"/clearqueue");
+					simpleSynchronous("http://"+app.connectionPath+"/"+app.sonosName+"/favorite/"+tempId);
+					hide();
+				}
 			}
-			font.family: qfont.italic.name
-			font.pixelSize: isNxt ? 20 : 16
-			text: qsTr("no-connection")
+
 		}
 	}
+
 	
 	//both functions below are required for the scrollable list
 	function pad(n, width) {
@@ -233,44 +211,6 @@ Screen {
 			return str;
 		}
 	
-	//This is the delegate of the scrollable list which have the input of the function "updateFavoriteslist"
-	Component {
-		id: playlistDelegate
-		//to make the list clickable
-		Item {
-			width: isNxt ? 450 : 360
-			height: isNxt ? 50 : 40	
-			MouseArea {
-				id: mouse_area1
-				z: 1
-				anchors.fill: parent
-				anchors.topMargin: isNxt ? -12 : -10
-				onClicked: {
-					simpleSynchronous("http://"+app.connectionPath+"/"+app.sonosName+"/clearqueue");
-					simpleSynchronous("http://"+app.connectionPath+"/"+app.sonosName+"/playlist/"+listItemText.text);
-				}
-			}
-			
-			Text {
-				id: listItemText
-
-				text: app.playlists[item]['name']
-				font.family: qfont.regular.name
-				font.pixelSize: isNxt ? 20 : 16
-				
-				wrapMode: Text.WrapAnywhere
-				maximumLineCount: 1
-				verticalAlignment: Text.AlignVCenter
-				anchors {
-					left: parent.left
-					leftMargin: isNxt ? 20 : 16
-					top: parent.top
-					topMargin: isNxt ? 20 : 16
-				}
-				width: boilerScrollableSimpleList.width - 150
-			}
-		}
-	}
 	//Property's for the scrollable list it self.
 
 	ScrollableSimpleList {
@@ -293,18 +233,34 @@ Screen {
 				verticalCenter: parent.verticalCenter
 			}
 		}
+	}
 
-		Text {
-			id: noConnectionText2
-			visible: false
-			anchors {
-				horizontalCenter: parent.horizontalCenter
-				horizontalCenterOffset: isNxt ? -30 : -25
-					verticalCenter: parent.verticalCenter
-			}
-			font.family: qfont.italic.name
-			font.pixelSize: isNxt ? 20 : 16
-			text: qsTr("no-connection")
+	//This is the delegate of the scrollable list which have the input of the function "updateFavoriteslist"
+	Component {
+		id: playlistDelegate
+		//to make the list clickable
+		Item {
+			width: isNxt ? 450 : 360
+			height: isNxt ? 50 : 40	
+			StandardButton {
+				id: playlistButtom
+				radius: 5
+				text: app.playlists[item]['name']
+				width: isNxt ? 350 : 280
+				anchors {
+					top: parent.top
+				}
+
+				onClicked: {
+					console.log("********** Spotify: send new playlist to Sonos from Favourites screen:" + app.playlistsURI[index]);
+					simpleSynchronous("http://"+app.connectionPath+"/"+app.sonosName+"/clearqueue");
+					if (app.musicSource == "Spotify") {
+						simpleSynchronous("http://"+app.connectionPath+"/"+app.sonosName+"/spotify/now/"+app.playlistsURI[index]);
+					} else {
+						simpleSynchronous("http://"+app.connectionPath+"/"+app.sonosName+"/playlist/"+listItemText.text);
+					}
+				}
+			}			
 		}
 	}
 
@@ -316,18 +272,19 @@ Screen {
 			if (xmlhttp.readyState == 4) {
 				if (xmlhttp.status == 200) {
 					var response = JSON.parse(xmlhttp.responseText);
-						boilerScrollableSimpleList.removeAll();
+						favouritesScrollableSimpleList.removeAll();
 						stationNameCheck();
 						if (response.length > 0) {
 							var tmpfavourites = [];
 							for (var i = 0; i < response.length; i++) {
 								tmpfavourites.push({"name": response[i]}); 
-								boilerScrollableSimpleList.addDevice(i);
+								favouritesScrollableSimpleList.addDevice(i);
 							}
 							app.favourites = tmpfavourites;
-							boilerScrollableSimpleList.refreshView();
-							if (boilerScrollableSimpleList.currentPage == -1) {
-								boilerScrollableSimpleList.scrollToPage(0);
+
+							favouritesScrollableSimpleList.refreshView();
+							if (favouritesScrollableSimpleList.currentPage == -1) {
+								favouritesScrollableSimpleList.scrollToPage(0);
 							}
 						} 
 						counterFav = response.length;
@@ -341,32 +298,76 @@ Screen {
 	//Fill the file: FavoriteslistItemsJS with only the item "Name" and also manage a little bit the scrollable list (with refreshing it). This has also the counter function.
 	function updatePlaylists() {
 
-		var xmlhttp = new XMLHttpRequest();
-		xmlhttp.onreadystatechange=function() {
-			if (xmlhttp.readyState == 4) {
-				if (xmlhttp.status == 200) {
-					var response = JSON.parse(xmlhttp.responseText);
+		if (app.selectedPlaylistUser > 0 ) {   // spotify users
+
+//			console.log("********* Spotify: start request get playlists. User:" + app.spotifyUserIDs[app.selectedPlaylistUser - 1]);
+			var xmlhttpSpot = new XMLHttpRequest();	
+			xmlhttpSpot.onreadystatechange=function() {
+//				console.log("********* Spotify: request readyState:" + xmlhttpSpot.readyState);
+
+				if (xmlhttpSpot.readyState == 4) {
+//					console.log("********* Spotify: request status:" + xmlhttpSpot.status);
+
+
+					if (xmlhttpSpot.status == 200) {
+//						console.log("********* Spotify: request response:\n" + xmlhttpSpot.responseText);
+
+						var response = JSON.parse(xmlhttpSpot.responseText);
 						playlistScrollableSimpleList.removeAll();
-						if (response.length > 0) {
+
+						if (response["items"].length > 0) {
 							var tmpplaylists = [];
-							for (var i = 0; i < response.length; i++) {
-								tmpplaylists.push({"name": response[i]}); 
+							var tmpplaylistsURI = [];
+							for (var i = 0; i < response["items"].length; i++) {
+								tmpplaylists.push({"name": response["items"][i]["name"]}); 
+								tmpplaylistsURI.push(response["items"][i]["uri"]); 
 								playlistScrollableSimpleList.addDevice(i);
 							}
 							app.playlists = tmpplaylists;
+							app.playlistsURI = tmpplaylistsURI;
 							playlistScrollableSimpleList.refreshView();
 							if (playlistScrollableSimpleList.currentPage == -1) {
 								playlistScrollableSimpleList.scrollToPage(0);
 							}
 						} 
 						pageThrobber.visible = false;
-						counterList = response.length;
-
+						counterList = response["items"].length;
 					}
 				}
 			}
-		xmlhttp.open("GET", "http://"+app.connectionPath+"/playlists");
-		xmlhttp.send();
+			xmlhttpSpot.open("GET", "https://api.spotify.com/v1/users/" + app.spotifyUserIDs[app.selectedPlaylistUser - 1] + "/playlists");
+                	xmlhttpSpot.setRequestHeader("Authorization", 'Bearer ' + app.spotifyToken["access_token"]);
+			xmlhttpSpot.send();
+		
+		} else { 			//else show Sonos playlists
+
+		
+			var xmlhttp = new XMLHttpRequest();
+			xmlhttp.onreadystatechange=function() {	
+				if (xmlhttp.readyState == 4) {
+					if (xmlhttp.status == 200) {
+						var response = JSON.parse(xmlhttp.responseText);
+							playlistScrollableSimpleList.removeAll();
+							if (response.length > 0) {
+								var tmpplaylists = [];
+								for (var i = 0; i < response.length; i++) {
+									tmpplaylists.push({"name": response[i]}); 
+									playlistScrollableSimpleList.addDevice(i);
+								}
+								app.playlists = tmpplaylists;
+								playlistScrollableSimpleList.refreshView();
+								if (playlistScrollableSimpleList.currentPage == -1) {
+									playlistScrollableSimpleList.scrollToPage(0);
+								}
+							} 
+							pageThrobber.visible = false;
+							counterList = response.length;
+						}
+					}
+				}
+			xmlhttp.open("GET", "http://"+app.connectionPath+"/playlists");
+			xmlhttp.send();
+		}
 	}
 	
 	//if the station name is equal to the now playing it will be visible in the scrollable list.
@@ -402,16 +403,6 @@ Screen {
 		}
 		xmlhttp.open("GET", "http://"+app.connectionPath+"/zones");
 		xmlhttp.send();
-	}
-	
-	//Timer as described in the "On Shown"
-	Timer {
-		id: sonosUpdateFavoriteList
-		interval: 7000
-		triggeredOnStart: true
-		running: false
-		repeat: true
-		onTriggered: updateFavoriteslist()
 	}
 }
 

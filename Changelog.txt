@@ -1,3 +1,7 @@
+1.3.0
+- added support for Spotify accounts, play your spotify playlists on Sonos via Toon.
+Setup accounts via the Sonos menu item and select your Spotify user at the Favourites screen for playback
+
 1.2.10
 - added position indicator (time) of currently playing song on tile and main screen
 

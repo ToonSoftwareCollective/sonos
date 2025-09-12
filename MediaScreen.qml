@@ -4,7 +4,7 @@ import qb.components 1.0
 
 Screen {
 	id: mediaScreen
-	screenTitle: qsTr("Sonos")
+	screenTitle: "Actuele playlist"
 	
 	//Property's are required to manage the correct Sonos Device
 
@@ -18,7 +18,7 @@ Screen {
 	property alias queueTimerControl : queueTimer
 	property alias positionIndicatorWidth : volumeBar.width
 	property alias positionIndicatorLeft : volumeBar.left
-	property bool positionIndicatorDragActive : falso
+	property bool positionIndicatorDragActive : false
 	property int positionIndicatorX
 	
 	onCustomButtonClicked: {

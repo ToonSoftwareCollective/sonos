@@ -112,12 +112,6 @@ Screen {
 		}
 
 		Item {
-			id: spacer
-			width: parent.width
-			height: 18
-		}
-
-		Item {
 			width: parent.width
 			height: childrenRect.height
 			
@@ -127,13 +121,6 @@ Screen {
 				width: isNxt ? 800 : 600
 				leftText: qsTr("Hostname of ip-adres")
 				leftTextAvailableWidth:isNxt ? 500 : 400
-
-				anchors {
-					left: parent.left
-					leftMargin: 10
-					top: titleText.bottom
-					topMargin: 6
-				}
 
 				onClicked: {
 					openKeyboard(p._IP_KEYBOARD);
@@ -166,12 +153,6 @@ Screen {
 				leftText: qsTr("Poortnummer (default is 5005)")
 				leftTextAvailableWidth:isNxt ? 500 : 400
 
-				anchors {
-					left: parent.left
-					leftMargin: 10
-					top: ipadresLabel.bottom
-					topMargin: 6
-				}
 				onClicked: {
 					openKeyboard(p._PORTNUMBER_KEYBOARD);
 				}
@@ -203,7 +184,7 @@ Screen {
 			left: parent.left
 			leftMargin: 44
 			top: labelContainer.bottom
-			topMargin: 30
+			topMargin: 20
 		}
 		font {
 			pixelSize: qfont.bodyText
@@ -219,7 +200,7 @@ Screen {
 		anchors {
 			left: systrayText.left
 			top: systrayText.bottom
-			topMargin: 15
+			topMargin: 5
 		}
 		leftIsSwitchedOn: false
 		onSelectedChangedByUser: {
@@ -239,7 +220,7 @@ Screen {
 			left: parent.left
 			leftMargin: 44
 			top: showSonosIconToggle.bottom
-			topMargin: 30
+			topMargin: 20
 		}
 		font {
 			pixelSize: qfont.bodyText
@@ -255,7 +236,7 @@ Screen {
 		anchors {
 			left: voetbalText.left
 			top: voetbalText.bottom
-			topMargin: 15
+			topMargin: 5
 		}
 		leftIsSwitchedOn: false
 		onSelectedChangedByUser: {
@@ -284,6 +265,46 @@ Screen {
 			}
 		}
 		visible: voetbalToggle.isSwitchedOn
+	}
+		
+	//Next part is to link Spotify accounts to this app for music playback on Sonos.
+
+
+	StandardButton {
+		id: editSpotifyUsersButton
+		width: isNxt ? 300 : 240
+		radius: 5
+		text: "Edit Spotify accounts"
+		fontPixelSize: isNxt ? 25 : 20
+		color: colors.background
+		anchors {
+			top: btnZone.bottom
+			topMargin: 20
+			left: voetbalText.left
+		}
+
+		onClicked: {
+			if (app.spotifyEditUsersScreen)	
+				app.spotifyEditUsersScreen.show();
+		}
+	}
+
+	TextEdit {
+		id: explainerText
+		width: isNxt ? 625 : 500
+		height: isNxt ? 300 : 240
+		wrapMode: Text.WordWrap
+		textFormat: TextEdit.RichText
+	        readOnly:true
+		text: "Om Spotify playlists te kunnen afspelen op de Sonos speakers moeten de gebruikersnamen van de spotify accounts worden ingevoerd. Deze kan je vinden in de account informatie op de Spotify app, een Spotify gebruikersnaam is typisch 34 karakters lang. Om een playlist hier te kunnen tonen moet de playlist openbaar zijn gemaakt en aan je Spotify profiel zijn toegevoegd."
+		font.family: qfont.semiBold.name
+		font.pixelSize: isNxt ? 20 : 16
+		anchors {
+			top: editSpotifyUsersButton.top
+			topMargin: isNxt ? -40 : -32
+			left: editSpotifyUsersButton.right
+			leftMargin: 10
+		}
 	}
 
 }
