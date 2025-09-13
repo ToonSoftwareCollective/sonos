@@ -40,12 +40,25 @@ Screen {
 				app.menuScreen.show();
 		}
 		queueTimer.start();
+		checkSpotifyConfiguration();
 	}
 	
 	//this popup is giving you the message that you have to correct your configuration in the menu screen.
 	function showPopup() {
 		qdialog.showDialog(qdialog.SizeLarge, qsTr("Informatie"), qsTr("U bent nu doorgestuurd naar het menuscherm omdat er of nog geen hostname en of poortnummer is ingevuld, of de Sonos HTTP Api werkt niet. <br><br> Check deze gegevens op het menuscherm waar u nu op terecht bent gekomen. ") , qsTr("Sluiten"));
 	}
+
+	function checkSpotifyConfiguration() {
+		
+		if (app.showSpotifyConfigMessage) {	
+			if (app.spotifyStatus == "toBeConfigured") {
+				qdialog.showDialog(qdialog.SizeLarge, "Spotify configuratie", "Deze versie van de app ondersteund integratie met Spotify.\nWilt U Spotify playlists en muziek afspelen in deze app?\nAls U met 'Ja' antwoord zal U worden doorgeleid naar het configuratiescherm.\nAls U 'Nee' antwoord zal dit scherm niet meer worden getoond.\n U kunt op een later tijdstip deze keuze wijzigen via het Sonos menu item",
+						qsTr("Nee, Spotify niet gebruiken"), function(){ app.spotifyStatus = "rejected"; app.saveSettings() },
+						qsTr("Ja, Spotify configureren"), function(){if (app.spotifyCredentialsScreen) app.spotifyCredentialsScreen.show()});
+				app.showSpotifyConfigMessage = false;
+			} 
+		}	
+	}	
 
 	function getZoneTitle() {
 		

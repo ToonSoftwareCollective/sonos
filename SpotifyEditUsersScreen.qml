@@ -159,10 +159,13 @@ Screen {
 
 		onClicked: {   //validate userid before adding
 
+			console.log("********* Spotify add user Bearer:"+ app.spotifyToken["access_token"]);
 			var xmlhttpSpot = new XMLHttpRequest();	
 			xmlhttpSpot.onreadystatechange=function() {
 				if (xmlhttpSpot.readyState == 4) {
-					if (xmlhttpSpot.status == 404) {
+					console.log("********* Spotify add user status:"+ xmlhttpSpot.status);
+			
+					if ((xmlhttpSpot.status == 404) || (xmlhttpSpot.status == 400)) {
 						qdialog.showDialog(qdialog.SizeLarge, "Foutmelding", "Spotify account niet gevonden, controleer de gebruikersnaam (string van 34 karakters)." , "Sluiten");
 					}
 					if (xmlhttpSpot.status == 200) {   //add user

@@ -20,7 +20,9 @@ App {
 	property url tileUrlControl : "SonosMiniControlTile.qml"
 	property url thumbnailIcon: "qrc:/tsc/SonosThumb.png"
 	property url spotifyEditUsersScreenUrl : "SpotifyEditUsersScreen.qml"
+	property url spotifyCredentialsScreenUrl : "SpotifyCredentialsScreen.qml"
 	property SpotifyEditUsersScreen spotifyEditUsersScreen 
+	property SpotifyCredentialsScreen spotifyCredentialsScreen 
 	property MenuScreen menuScreen
 	property MediaScreen mediaScreen
 	property MessageScreen messageScreen
@@ -43,6 +45,8 @@ App {
 	property variant sonoslist : []
 	property variant spotifyUserNames : []
 	property variant spotifyUserIDs : []
+	property string spotifyStatus : "toBeConfigured"
+	property bool showSpotifyConfigMessage  : true
 
 	property int selectedPlaylistUser : 0  // (0 = Sonos, >0 is a Spotify user account)
 
@@ -71,10 +75,15 @@ App {
 			"voetbalTussenstanden" : "",
 			"selectedPlaylistUser" : 0,
 			"spotifyUserNames" : [],
-			"spotifyUserIDs" : []
+			"spotifyUserIDs" : [],
+			"spotifyStatus" : "",
+			"spotifyClientId" : "",
+			"spotifyClientSecret" : ""
 		}
 
 	property variant spotifyToken : {
+			"spotifyClientId" : "",
+			"spotifyClientSecret" : "",
 			"access_token" : ""
 		}
 	property string musicSource : "Sonos"   // either "Sonos"or "Spotify"
@@ -88,7 +97,7 @@ App {
 	property int trackElapsedTime 
 	property bool showSlider : false
 	property bool showSliderTime : false
-	property string requestHeader : "grant_type"
+
 
 	//this is the main property for the complete Sonos App!
 	property string connectionPath
@@ -113,13 +122,13 @@ App {
 		registry.registerWidget("screen", spotifySelectUserUrl, this, "spotifySelectUser");
 		registry.registerWidget("screen", mediaSelectZoneUrl, this, "mediaSelectZone");
 		registry.registerWidget("screen", spotifyEditUsersScreenUrl, this, "spotifyEditUsersScreen");
+		registry.registerWidget("screen", spotifyCredentialsScreenUrl, this, "spotifyCredentialsScreen");
 		registry.registerWidget("menuItem", null, this, null, {objectName: "sonosMenuItem", label: qsTr("Sonos"), image: thumbnailIcon, screenUrl: menuScreenUrl, weight: 120});
 		registry.registerWidget("tile", tileUrl, this, null, {thumbLabel: qsTr("Sonos"), thumbIcon: thumbnailIcon, thumbCategory: "general", thumbWeight: 30, baseTileWeight: 10, thumbIconVAlignment: "center"});
 	}
 	
 	//this function needs to be started after the app is booted.
 	Component.onCompleted: {
-		requestHeader = requestHeader + "=client"
 		readSettings();
 
 	}
@@ -218,6 +227,9 @@ App {
 		settings["selectedPlaylistUser"] = selectedPlaylistUser;
 		settings["spotifyUserNames"] = spotifyUserNames;
 		settings["spotifyUserIDs"] = spotifyUserIDs;
+		settings["spotifyStatus"] = spotifyStatus;
+		settings["spotifyClientId"] = spotifyToken["spotifyClientId"]
+		settings["spotifyClientSecret"] = spotifyToken["spotifyClientSecret"]
 
 		var saveFile = new XMLHttpRequest();
 		saveFile.open("PUT", "file:///mnt/data/tsc/sonos.userSettings.json");
@@ -244,9 +256,12 @@ App {
 		} else {
 			musicSource = "Spotify"
 		}
-		requestHeader = requestHeader + "_credentials"
 		if (settings['spotifyUserNames']) spotifyUserNames= settings['spotifyUserNames'];
 		if (settings['spotifyUserIDs']) spotifyUserIDs= settings['spotifyUserIDs'];
+		if (settings['spotifyStatus']) spotifyStatus= settings['spotifyStatus'];
+		if (settings['spotifyClientId']) spotifyToken["spotifyClientId"] = settings['spotifyClientId'];
+		if (settings['spotifyClientSecret']) spotifyToken["spotifyClientSecret"] = settings['spotifyClientSecret'];
+
 		if (settings['path']) {
 			connectionPath = (settings['path']);
 			if (connectionPath.length > 0) {
@@ -257,7 +272,7 @@ App {
 			}
 			updateAvailableZones();
 		}
-		getSpotifyBearerToken();
+		if (spotifyStatus == "configured") getSpotifyBearerToken();
 	}
 
 
@@ -266,8 +281,6 @@ App {
 
 	function getSpotifyBearerToken() {
 
-		var now = new Date()
-		var rc = now.toString().substring(0,3);
 		var xmlhttpSpot = new XMLHttpRequest();
 		xmlhttpSpot.onreadystatechange=function() {
 			if (xmlhttpSpot.readyState == 4) {
@@ -279,15 +292,15 @@ App {
 		}
 		xmlhttpSpot.open("POST", "https://accounts.spotify.com/api/token");
                 xmlhttpSpot.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-                xmlhttpSpot.setRequestHeader("Authorization", 'Basic ' + getRandomSeed("" + Math.pow(rc.length,10) * 1592639 + "c" + 2*5*43019 + "c" + ((2 * 3 * 13 * 73)-1) + "e" + (Math.pow(2,3) * 1097) + "aa4b:" + "9a" + Math.pow(2,2) * Math.pow(7,3) * 443 + ((Math.pow(2,2) * 19 * 12923) - 1) + "fc" + Math.pow(3,2) + "ba3b8" + (Math.pow(2,2) * 131) + "dbc2318"));
-		xmlhttpSpot.send(requestHeader);
+                xmlhttpSpot.setRequestHeader("Authorization", 'Basic ' + customBtoa(spotifyToken["spotifyClientId"] + ":" + spotifyToken["spotifyClientSecret"]));
+		xmlhttpSpot.send('grant_type=client_credentials');
 		tokenRefreshTimer.stop()
 		tokenRefreshTimer.interval = 3599000;
 		tokenRefreshTimer.start()
 	}
  
 
-	function getRandomSeed(str) {
+	function customBtoa(str) {
   		const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=';
   		let encoded = '';
   		let i = 0;
@@ -430,7 +443,7 @@ App {
 	Timer {
 		id: tokenRefreshTimer // Tokens valid only for 1 hour
 		triggeredOnStart: false
-		running: false
+		running: true
 		repeat: true
 		onTriggered: getSpotifyBearerToken()
 	}

@@ -107,7 +107,7 @@ Screen {
 					family: qfont.regular.name
 				}
 				wrapMode: Text.WordWrap
-				text: "Configureer hier de instellingen voor Sonos"
+				text: "Configureer hier de instellingen voor Sonos-http-api server:"
 			}
 		}
 
@@ -191,7 +191,7 @@ Screen {
 			family: qfont.regular.name
 		}
 		wrapMode: Text.WordWrap
-		text: "Sonos icoon zichtbaar op systray?"
+		text: app.spotifyStatus + "Sonos icoon zichtbaar op systray?"
 	}
 	
 		OnOffToggle {
@@ -282,7 +282,7 @@ Screen {
 			topMargin: 20
 			left: voetbalText.left
 		}
-
+		visible: (app.spotifyStatus == "configured")
 		onClicked: {
 			if (app.spotifyEditUsersScreen)	
 				app.spotifyEditUsersScreen.show();
@@ -305,6 +305,27 @@ Screen {
 			left: editSpotifyUsersButton.right
 			leftMargin: 10
 		}
+		visible: (app.spotifyStatus == "configured")
 	}
+
+	StandardButton {
+		id: editSpotifyCredentialsButton
+		width: isNxt ? 375 : 300
+		radius: 5
+		text: "Enable Spotify integratie"
+		fontPixelSize: isNxt ? 25 : 20
+		color: colors.background
+		anchors {
+			top: btnZone.bottom
+			topMargin: 20
+			left: voetbalText.left
+		}
+		visible: (app.spotifyStatus !== "configured")
+		onClicked: {
+			if (app.spotifyCredentialsScreen)	
+				app.spotifyCredentialsScreen.show();
+		}
+	}
+
 
 }

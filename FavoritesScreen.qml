@@ -252,7 +252,6 @@ Screen {
 				}
 
 				onClicked: {
-					console.log("********** Spotify: send new playlist to Sonos from Favourites screen:" + app.playlistsURI[index]);
 					simpleSynchronous("http://"+app.connectionPath+"/"+app.sonosName+"/clearqueue");
 					if (app.musicSource == "Spotify") {
 						simpleSynchronous("http://"+app.connectionPath+"/"+app.sonosName+"/spotify/now/"+app.playlistsURI[index]);
@@ -299,39 +298,34 @@ Screen {
 	function updatePlaylists() {
 
 		if (app.selectedPlaylistUser > 0 ) {   // spotify users
+			if (app.spotifyStatus == "configured") {
+				var xmlhttpSpot = new XMLHttpRequest();	
+				xmlhttpSpot.onreadystatechange=function() {
+					if (xmlhttpSpot.readyState == 4) {
 
-//			console.log("********* Spotify: start request get playlists. User:" + app.spotifyUserIDs[app.selectedPlaylistUser - 1]);
-			var xmlhttpSpot = new XMLHttpRequest();	
-			xmlhttpSpot.onreadystatechange=function() {
-//				console.log("********* Spotify: request readyState:" + xmlhttpSpot.readyState);
-
-				if (xmlhttpSpot.readyState == 4) {
-//					console.log("********* Spotify: request status:" + xmlhttpSpot.status);
-
-
-					if (xmlhttpSpot.status == 200) {
-//						console.log("********* Spotify: request response:\n" + xmlhttpSpot.responseText);
-
-						var response = JSON.parse(xmlhttpSpot.responseText);
-						playlistScrollableSimpleList.removeAll();
-
-						if (response["items"].length > 0) {
-							var tmpplaylists = [];
-							var tmpplaylistsURI = [];
-							for (var i = 0; i < response["items"].length; i++) {
-								tmpplaylists.push({"name": response["items"][i]["name"]}); 
-								tmpplaylistsURI.push(response["items"][i]["uri"]); 
-								playlistScrollableSimpleList.addDevice(i);
-							}
-							app.playlists = tmpplaylists;
-							app.playlistsURI = tmpplaylistsURI;
-							playlistScrollableSimpleList.refreshView();
-							if (playlistScrollableSimpleList.currentPage == -1) {
-								playlistScrollableSimpleList.scrollToPage(0);
-							}
-						} 
-						pageThrobber.visible = false;
-						counterList = response["items"].length;
+						if (xmlhttpSpot.status == 200) {
+	
+							var response = JSON.parse(xmlhttpSpot.responseText);
+							playlistScrollableSimpleList.removeAll();
+	
+							if (response["items"].length > 0) {
+								var tmpplaylists = [];
+								var tmpplaylistsURI = [];
+								for (var i = 0; i < response["items"].length; i++) {
+									tmpplaylists.push({"name": response["items"][i]["name"]}); 
+									tmpplaylistsURI.push(response["items"][i]["uri"]); 
+									playlistScrollableSimpleList.addDevice(i);
+								}
+								app.playlists = tmpplaylists;
+								app.playlistsURI = tmpplaylistsURI;
+								playlistScrollableSimpleList.refreshView();
+								if (playlistScrollableSimpleList.currentPage == -1) {
+									playlistScrollableSimpleList.scrollToPage(0);
+								}
+							} 
+							pageThrobber.visible = false;
+							counterList = response["items"].length;
+						}
 					}
 				}
 			}

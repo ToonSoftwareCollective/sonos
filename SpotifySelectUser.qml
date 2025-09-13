@@ -9,8 +9,6 @@ Screen {
 
 	screenTitle: "Selecteer een bron voor de afspeellijsten"
 	
-	onHidden: queueTimer.stop();
-
 	onShown: {
 			radioButtonList.clearModel();
 			radioButtonList.addItem("Sonos playlist");
