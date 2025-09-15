@@ -18,14 +18,20 @@ Screen {
 	}
 
 	onCustomButtonClicked: {
-		if (app.messageScreen) {
-			 app.messageScreen.show();
+		if (app.spotifyStatus == "configured") {
+			if (app.spotifyMusicSearchScreen) app.spotifyMusicSearchScreen.show();
+		} else {
+			if (app.messageScreen) app.messageScreen.show();
 		}
 	}
 	
 
 	onShown: {
-		addCustomTopRightButton("Audiobericht");	
+		if (app.spotifyStatus == "configured") {
+			addCustomTopRightButton("Zoek Muziek");
+		} else {
+			addCustomTopRightButton("Audiobericht");
+		}
 		screenStateController.screenColorDimmedIsReachable = false;
 		pageThrobber.visible = true;
 		updateFavoriteslist();

@@ -21,6 +21,8 @@ App {
 	property url thumbnailIcon: "qrc:/tsc/SonosThumb.png"
 	property url spotifyEditUsersScreenUrl : "SpotifyEditUsersScreen.qml"
 	property url spotifyCredentialsScreenUrl : "SpotifyCredentialsScreen.qml"
+	property url spotifyMusicSearchScreenUrl : "SpotifyMusicSearchScreen.qml"
+	property SpotifyMusicSearchScreen spotifyMusicSearchScreen 
 	property SpotifyEditUsersScreen spotifyEditUsersScreen 
 	property SpotifyCredentialsScreen spotifyCredentialsScreen 
 	property MenuScreen menuScreen
@@ -122,6 +124,7 @@ App {
 		registry.registerWidget("screen", spotifySelectUserUrl, this, "spotifySelectUser");
 		registry.registerWidget("screen", mediaSelectZoneUrl, this, "mediaSelectZone");
 		registry.registerWidget("screen", spotifyEditUsersScreenUrl, this, "spotifyEditUsersScreen");
+		registry.registerWidget("screen", spotifyMusicSearchScreenUrl, this, "spotifyMusicSearchScreen");
 		registry.registerWidget("screen", spotifyCredentialsScreenUrl, this, "spotifyCredentialsScreen");
 		registry.registerWidget("menuItem", null, this, null, {objectName: "sonosMenuItem", label: qsTr("Sonos"), image: thumbnailIcon, screenUrl: menuScreenUrl, weight: 120});
 		registry.registerWidget("tile", tileUrl, this, null, {thumbLabel: qsTr("Sonos"), thumbIcon: thumbnailIcon, thumbCategory: "general", thumbWeight: 30, baseTileWeight: 10, thumbIconVAlignment: "center"});
