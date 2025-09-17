@@ -149,9 +149,9 @@ Tile {
 		iconSource: "qrc:/tsc/volume_down_small.png"
 		onClicked: {
 			if (app.sonosNameIsGroup) {
-				app.simpleSynchronous("http://"+app.connectionPath+"/"+app.sonosName+"/groupVolume/-5");
+				app.simpleSynchronous("http://"+app.connectionPath+"/"+app.sonosName+"/groupVolume/-2");
 			} else {
-				app.simpleSynchronous("http://"+app.connectionPath+"/"+app.sonosName+"/volume/-5");
+				app.simpleSynchronous("http://"+app.connectionPath+"/"+app.sonosName+"/volume/-2");
 			}
 		}
 		visible: !dimState
@@ -233,9 +233,9 @@ Tile {
 		iconSource: "qrc:/tsc/volume_up_small.png"
 		onClicked: {
 			if (app.sonosNameIsGroup) {
-				app.simpleSynchronous("http://"+app.connectionPath+"/"+app.sonosName+"/groupVolume/+5");
+				app.simpleSynchronous("http://"+app.connectionPath+"/"+app.sonosName+"/groupVolume/+2");
 			} else {
-				app.simpleSynchronous("http://"+app.connectionPath+"/"+app.sonosName+"/volume/+5");
+				app.simpleSynchronous("http://"+app.connectionPath+"/"+app.sonosName+"/volume/+2");
 			}
 		}
 		visible: !dimState

@@ -355,9 +355,9 @@ Screen {
 		iconSource: "qrc:/tsc/volume_up.png"
 		onClicked: {
 			if (app.sonosNameIsGroup) {
-				app.simpleSynchronous("http://"+app.connectionPath+"/"+app.sonosName+"/groupVolume/+5");
+				app.simpleSynchronous("http://"+app.connectionPath+"/"+app.sonosName+"/groupVolume/+2");
 			} else {
-				app.simpleSynchronous("http://"+app.connectionPath+"/"+app.sonosName+"/volume/+5");
+				app.simpleSynchronous("http://"+app.connectionPath+"/"+app.sonosName+"/volume/+2");
 			}
 		}
 	}
@@ -375,9 +375,9 @@ Screen {
 		iconSource: "qrc:/tsc/volume_down.png"
 		onClicked: {
 			if (app.sonosNameIsGroup) {
-				app.simpleSynchronous("http://"+app.connectionPath+"/"+app.sonosName+"/groupVolume/-5");
+				app.simpleSynchronous("http://"+app.connectionPath+"/"+app.sonosName+"/groupVolume/-2");
 			} else {
-				app.simpleSynchronous("http://"+app.connectionPath+"/"+app.sonosName+"/volume/-5");
+				app.simpleSynchronous("http://"+app.connectionPath+"/"+app.sonosName+"/volume/-2");
 			}
 		}
 	}

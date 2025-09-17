@@ -82,11 +82,11 @@ Rectangle
 		iconSource: "qrc:/tsc/volume_down_small.png"
 		onClicked: {
 			if (isGroup == "yes") {
-				app.simpleSynchronous("http://"+app.connectionPath+"/"+app.sonosName+"/groupVolume/-5");
+				app.simpleSynchronous("http://"+app.connectionPath+"/"+app.sonosName+"/groupVolume/-2");
 			} else {
-				app.simpleSynchronous("http://"+app.connectionPath+"/"+app.sonosName+"/volume/-5");
+				app.simpleSynchronous("http://"+app.connectionPath+"/"+app.sonosName+"/volume/-2");
 			}
-			volume = volume - 5;
+			volume = volume - 2;
 			if (volume < 0 ) volume = 0;
 		}
 		visible: volume > 0
@@ -162,11 +162,11 @@ Rectangle
 		iconSource: "qrc:/tsc/volume_up_small.png"
 		onClicked: {
 			if (isGroup == "yes") {
-				app.simpleSynchronous("http://"+app.connectionPath+"/"+app.sonosName+"/groupVolume/+5");
+				app.simpleSynchronous("http://"+app.connectionPath+"/"+app.sonosName+"/groupVolume/+2");
 			} else {
-				app.simpleSynchronous("http://"+app.connectionPath+"/"+app.sonosName+"/volume/+5");
+				app.simpleSynchronous("http://"+app.connectionPath+"/"+app.sonosName+"/volume/+2");
 			}
-			volume = volume + 5;
+			volume = volume + 2;
 			if (volume > 100) volume = 100;
 		}
 		visible: volume < 100
